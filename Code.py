@@ -13,15 +13,15 @@ if 'has_fvc_pred' not in st.session_state:
 # Load data based on gender
 def load_data(gender):
     if gender == 'Male':
-        df_fev1 = pd.read_csv("Male FEV1.csv")
-        df_fvc = pd.read_csv("Male FVC.csv")
-        df_fev1_fvc = pd.read_csv("Male FEV1 FVC.csv")
-        df_rv = pd.read_csv("Male RV.csv")
+        df_fev1 = pd.read_csv(r"C:\Users\vbhati\OneDrive - Pulmonx\Documents\GLI Calculator\Male FEV1.csv")
+        df_fvc = pd.read_csv(r"C:\Users\vbhati\OneDrive - Pulmonx\Documents\GLI Calculator\Male FVC.csv")
+        df_fev1_fvc = pd.read_csv(r"C:\Users\vbhati\OneDrive - Pulmonx\Documents\GLI Calculator\Male FEV1 FVC.csv")
+        df_rv = pd.read_csv(r"C:\Users\vbhati\OneDrive - Pulmonx\Documents\GLI Calculator\Male RV.csv")
     else:
-        df_fev1 = pd.read_csv("Female FEV1.csv")
-        df_fvc = pd.read_csv("Female FCV.csv")
-        df_fev1_fvc = pd.read_csv("Female FEV1 FVC.csv")
-        df_rv = pd.read_csv("Female RV.csv")
+        df_fev1 = pd.read_csv(r"C:\Users\vbhati\OneDrive - Pulmonx\Documents\GLI Calculator\Female FEV1.csv")
+        df_fvc = pd.read_csv(r"C:\Users\vbhati\OneDrive - Pulmonx\Documents\GLI Calculator\Female FCV.csv")
+        df_fev1_fvc = pd.read_csv(r"C:\Users\vbhati\OneDrive - Pulmonx\Documents\GLI Calculator\Female FEV1 FVC.csv")
+        df_rv = pd.read_csv(r"C:\Users\vbhati\OneDrive - Pulmonx\Documents\GLI Calculator\Female RV.csv")
     return df_fev1, df_fvc, df_fev1_fvc,df_rv
 
 # Calculate FEV1, FVC, and FEV1/FVC based on gender
