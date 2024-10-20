@@ -1,4 +1,3 @@
 validate_email
 pandas
 numpy
-math
