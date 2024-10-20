@@ -5,6 +5,7 @@ import math
 from validate_email import validate_email
 import boto3
 from io import StringIO
+from datetime import date, datetime
 
 # Load AWS configuration from secrets
 access_key = st.secrets["aws"]["access_key"]
@@ -21,6 +22,8 @@ s3_client = boto3.client(
 
 def append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, height, measured_fev1, measured_fvc, fvc_percent_predicted, predicted_fev1, predicted_fvc, predicted_fev1_fvc, rv_percent_est, rv150_prob, rv175_prob, rv200_prob):
     # Prepare data row with actual values
+    date_today  = date.today()
+    date_time = datetime.now()
     data_row = {
         'Email': email,
         'RV% Threshold': rv_threshold,
@@ -38,7 +41,9 @@ def append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, heigh
         'RV % Est': rv_percent_est,
         'RV >150%_PROB': rv150_prob ,
         'RV >175%_PROB': rv175_prob ,
-        'RV >200%_P': rv200_prob
+        'RV >200%_P': rv200_prob,
+        'Date':date_today,
+        'Date_Time':date_time
     }
     # Convert new data row to DataFrame
     new_data = pd.DataFrame([data_row])
@@ -56,7 +61,7 @@ def append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, heigh
     
     # Convert DataFrame to CSV string
     csv_buffer = StringIO()
-    updated_data.to_csv(csv_buffer, index=False, sep='|')
+    updated_data.to_csv(csv_buffer, index=False, sep='|',header=False)
     
     # Upload updated CSV back to S3
     s3_client.put_object(Bucket=bucket_name, Key=s3_filename, Body=csv_buffer.getvalue())
