@@ -20,51 +20,31 @@ s3_client = boto3.client(
     aws_secret_access_key=secret_key
 )
 
-def append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, height, measured_fev1, measured_fvc, fvc_percent_predicted, predicted_fev1, predicted_fvc, predicted_fev1_fvc, rv_percent_est, rv150_prob, rv175_prob, rv200_prob):
-    # Prepare data row with actual values
-    date_today  = date.today()
-    date_time = datetime.now()
-    data_row = {
-        'Email': email,
-        'RV% Threshold': rv_threshold,
-        'Standard': standard,
-        'Have FVC % Predicted': has_fvc_pred,
-        'Gender': gender,
-        'Age': age,
-        'Height': height,
-        'M_FEV1': measured_fev1,
-        'M_FVC': measured_fvc,
-        'FVC_%_P': fvc_percent_predicted,
-        'P_FEV1': round(predicted_fev1,2) if has_fvc_pred == 'No' else '',
-        'P_FVC': round(predicted_fvc,2) if has_fvc_pred == 'No' else '',
-        'P_FEV1/FVC': round(predicted_fev1_fvc,2) if has_fvc_pred == 'No' else '',
-        'RV % Est': rv_percent_est,
-        'RV >150%_PROB': rv150_prob ,
-        'RV >175%_PROB': rv175_prob ,
-        'RV >200%_P': rv200_prob,
-        'Date':date_today,
-        'Date_Time':date_time
-    }
-    # Convert new data row to DataFrame
-    new_data = pd.DataFrame([data_row])
-    
+def append_to_s3_correctly(email, rv_threshold, standard, has_fvc_pred, gender, age, height, measured_fev1, measured_fvc, fvc_percent_predicted, predicted_fev1, predicted_fvc, predicted_fev1_fvc, rv_percent_est, rv150_prob, rv175_prob, rv200_prob):
+    # Prepare the CSV row as a string, note the newline at the start
+    date_today = date.today().isoformat()
+    date_time = datetime.now().isoformat()
+    data_row = f"\n{email}|{rv_threshold}|{standard}|{has_fvc_pred}|{gender}|{age}|{height}|{measured_fev1}|{measured_fvc}|{fvc_percent_predicted}|{round(predicted_fev1, 2) if has_fvc_pred == 'No' else ''}|{round(predicted_fvc, 2) if has_fvc_pred == 'No' else ''}|{round(predicted_fev1_fvc, 2) if has_fvc_pred == 'No' else ''}|{rv_percent_est}|{rv150_prob}|{rv175_prob}|{rv200_prob}|{date_today}|{date_time}"
+
     # Bucket and file details
     bucket_name = st.secrets["aws"]["bucket_name"]
     s3_filename = st.secrets["aws"]["s3_filename"]
 
-    # Download the existing data from S3
+    # Initialize S3 client
+    s3_client = boto3.client('s3', aws_access_key_id=st.secrets["aws"]["access_key"], aws_secret_access_key=st.secrets["aws"]["secret_key"])
+
+    # Download the existing CSV from S3
     response = s3_client.get_object(Bucket=bucket_name, Key=s3_filename)
-    existing_data = pd.read_csv(response['Body'],sep='|')
-    
-    # Append new data to existing data
-    updated_data = pd.concat([existing_data, new_data], ignore_index=True)
-    
-    # Convert DataFrame to CSV string
-    csv_buffer = StringIO()
-    updated_data.to_csv(csv_buffer, index=False, sep='|',header=False)
-    
-    # Upload updated CSV back to S3
-    s3_client.put_object(Bucket=bucket_name, Key=s3_filename, Body=csv_buffer.getvalue())
+    existing_data = response['Body'].read().decode('utf-8')
+
+    # Append the new data
+    updated_data = existing_data + data_row
+
+    # Upload the updated data back to S3
+    s3_client.put_object(Bucket=bucket_name, Key=s3_filename, Body=updated_data.encode('utf-8'))
+
+    # Confirm upload
+    st.success("Data appended successfully to S3")
 
 # Initialize session state variables if they don't exist
 if 'standard' not in st.session_state:
