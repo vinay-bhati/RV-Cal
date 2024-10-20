@@ -24,7 +24,7 @@ def append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, heigh
     # Prepare the CSV row as a string, note the newline at the start
     date_today = date.today().isoformat()
     date_time = datetime.now().isoformat()
-    data_row = f"\n{email}|{rv_threshold}|{standard}|{has_fvc_pred}|{gender}|{age}|{height}|{measured_fev1}|{measured_fvc}|{fvc_percent_predicted}|{round(predicted_fev1, 2) if has_fvc_pred == 'No' else ''}|{round(predicted_fvc, 2) if has_fvc_pred == 'No' else ''}|{round(predicted_fev1_fvc, 2) if has_fvc_pred == 'No' else ''}|{rv_percent_est}|{rv150_prob}|{rv175_prob}|{rv200_prob}|{date_today}|{date_time}"
+    data_row = f"\n{email}|{rv_threshold}|{standard}|{has_fvc_pred}|{gender}|{age}|{height}|{measured_fev1}|{measured_fvc}|{fvc_percent_predicted}|{round(predicted_fev1, 2) if has_fvc_pred == 'No' else ''}|{round(predicted_fvc, 2) if has_fvc_pred == 'No' else ''}|{round(predicted_fev1_fvc, 2) if has_fvc_pred == 'No' else ''}|{rv_percent_est}|{round(rv150_prob,2)}|{round(rv175_prob,2)}|{round(rv200_prob,2)}|{date_today}|{date_time}"
 
     # Bucket and file details
     bucket_name = st.secrets["aws"]["bucket_name"]
@@ -42,9 +42,6 @@ def append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, heigh
 
     # Upload the updated data back to S3
     s3_client.put_object(Bucket=bucket_name, Key=s3_filename, Body=updated_data.encode('utf-8'))
-
-    # Confirm upload
-    st.success("Data appended successfully to S3")
 
 # Initialize session state variables if they don't exist
 if 'standard' not in st.session_state:
