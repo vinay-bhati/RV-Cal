@@ -31,14 +31,14 @@ def append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, heigh
         'Height': height,
         'M_FEV1': measured_fev1,
         'M_FVC': measured_fvc,
-        'FVC_%_P': fvc_percent_predicted if has_fvc_pred == 'Yes' else '',
+        'FVC_%_P': fvc_percent_predicted,
         'P_FEV1': predicted_fev1 if has_fvc_pred == 'No' else '',
         'P_FVC': predicted_fvc if has_fvc_pred == 'No' else '',
         'P_FEV1/FVC': predicted_fev1_fvc if has_fvc_pred == 'No' else '',
-        'RV % Est': rv_percent_est if has_fvc_pred == 'No' else '',
-        'RV >150%_PROB': rv150_prob if has_fvc_pred == 'No' else '',
-        'RV >175%_PROB': rv175_prob if has_fvc_pred == 'No' else '',
-        'RV >200%_P': rv200_prob if has_fvc_pred == 'No' else ''
+        'RV % Est': rv_percent_est,
+        'RV >150%_PROB': rv150_prob ,
+        'RV >175%_PROB': rv175_prob ,
+        'RV >200%_P': rv200_prob
     }
     # Convert new data row to DataFrame
     new_data = pd.DataFrame([data_row])
