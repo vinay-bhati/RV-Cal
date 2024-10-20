@@ -13,14 +13,14 @@ if 'has_fvc_pred' not in st.session_state:
 # Load data based on gender
 def load_data(gender):
     if gender == 'Male':
-        df_fev1 = "Male FEV1.csv"
-        df_fvc = "Male FVC.csv"
-        df_fev1_fvc = "Male FEV1 FVC.csv"
+        df_fev1 = pd.read_csv("Male FEV1.csv")
+        df_fvc = pd.read_csv("Male FVC.csv")
+        df_fev1_fvc = pd.read_csv("Male FEV1 FVC.csv")
         #df_rv = "Male RV.csv"
     else:
-        df_fev1 = "Female FEV1.csv"
-        df_fvc = "Female FCV.csv"
-        df_fev1_fvc = "Female FEV1 FVC.csv"
+        df_fev1 = pd.read_csv("Female FEV1.csv")
+        df_fvc = pd.read_csv("Female FCV.csv")
+        df_fev1_fvc = pd.read_csv("Female FEV1 FVC.csv")
         #df_rv = "Female RV.csv"
     return df_fev1, df_fvc, df_fev1_fvc
 
