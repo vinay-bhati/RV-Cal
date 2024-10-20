@@ -47,24 +47,32 @@ def calculate_values(age, height, gender):
     return M_FEV1, M_FVC, M_FEV1_FVC,#M_RV
 
 def calculate_rv_est(percent_predicted_fvc, measured_fev1_fvc, age, gender):
+    # Load constants from secrets
+    consts = st.secrets["rv_est_constants"]
+    
     # Converting gender to numeric value: 1 for Male, 0 for Female
     gender_numeric = 1 if gender == 'Male' else 0
     
-    # Calculation as per the provided formula
+    # Use constants from secrets.toml for calculations
     rv_est = round(
-        (percent_predicted_fvc * 4.09177 +
-         round(measured_fev1_fvc,3) * -208.123 +
-         np.sqrt(percent_predicted_fvc) * -93.1544 +
-         age * -2.01415 +
-         gender_numeric * -11.0523 +
-         909.1686), 1)
+        (percent_predicted_fvc * consts["fvc_multiplier"] +
+         round(measured_fev1_fvc, 3) * consts["fev1_fvc_multiplier"] +
+         np.sqrt(percent_predicted_fvc) * consts["fvc_sqrt_multiplier"] +
+         age * consts["age_multiplier"] +
+         gender_numeric * consts["gender_multiplier"] +
+         consts["constant"]), 1)
     
     return rv_est
 
 def calculate_rv_predicted(rv_percent_est):
-    rv150 = round((1 / (1 + math.exp(-1 * (-8.334997 + 0.0506715 * rv_percent_est)))), 3) * 100
-    rv175 = round((1 / (1 + math.exp(-1 * (-10.22612 + 0.054502 * rv_percent_est)))), 3) * 100
-    rv200 = round((1 / (1 + math.exp(-1 * (-10.69602 + 0.0515848 * rv_percent_est)))), 3) * 100
+    # Load constants from secrets
+    preds = st.secrets["rv_pred_constants"]
+    
+    # Using the logistic regression model to predict probabilities
+    rv150 = round((1 / (1 + math.exp(-1 * (preds["rv150_coef"] + preds["rv150_intercept"] * rv_percent_est)))), 3) * 100
+    rv175 = round((1 / (1 + math.exp(-1 * (preds["rv175_coef"] + preds["rv175_intercept"] * rv_percent_est)))), 3) * 100
+    rv200 = round((1 / (1 + math.exp(-1 * (preds["rv200_coef"] + preds["rv200_intercept"] * rv_percent_est)))), 3) * 100
+    
     return rv150, rv175, rv200
 
 
