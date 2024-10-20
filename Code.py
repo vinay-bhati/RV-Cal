@@ -3,6 +3,63 @@ import pandas as pd
 import numpy as np
 import math
 from validate_email import validate_email
+import boto3
+from io import StringIO
+
+# Load AWS configuration from secrets
+access_key = st.secrets["aws"]["access_key"]
+secret_key = st.secrets["aws"]["secret_key"]
+bucket_name = st.secrets["aws"]["bucket_name"]
+s3_filename = st.secrets["aws"]["s3_filename"]
+
+# Initialize the S3 client
+s3_client = boto3.client(
+    's3',
+    aws_access_key_id=access_key,
+    aws_secret_access_key=secret_key
+)
+
+def append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, height, measured_fev1, measured_fvc, fvc_percent_predicted, predicted_fev1, predicted_fvc, predicted_fev1_fvc, rv_percent_est, rv150_prob, rv175_prob, rv200_prob):
+    # Prepare data row with actual values
+    data_row = {
+        'Email': email,
+        'RV% Threshold': rv_threshold,
+        'Standard': standard,
+        'Have FVC % Predicted': has_fvc_pred,
+        'Gender': gender,
+        'Age': age,
+        'Height': height,
+        'M_FEV1': measured_fev1,
+        'M_FVC': measured_fvc,
+        'FVC_%_P': fvc_percent_predicted if has_fvc_pred == 'Yes' else '',
+        'P_FEV1': predicted_fev1 if has_fvc_pred == 'No' else '',
+        'P_FVC': predicted_fvc if has_fvc_pred == 'No' else '',
+        'P_FEV1/FVC': predicted_fev1_fvc if has_fvc_pred == 'No' else '',
+        'RV % Est': rv_percent_est if has_fvc_pred == 'No' else '',
+        'RV >150%_PROB': rv150_prob if has_fvc_pred == 'No' else '',
+        'RV >175%_PROB': rv175_prob if has_fvc_pred == 'No' else '',
+        'RV >200%_P': rv200_prob if has_fvc_pred == 'No' else ''
+    }
+    # Convert new data row to DataFrame
+    new_data = pd.DataFrame([data_row])
+    
+    # Bucket and file details
+    bucket_name = st.secrets["aws"]["bucket_name"]
+    s3_filename = st.secrets["aws"]["s3_filename"]
+
+    # Download the existing data from S3
+    response = s3_client.get_object(Bucket=bucket_name, Key=s3_filename)
+    existing_data = pd.read_csv(response['Body'])
+    
+    # Append new data to existing data
+    updated_data = pd.concat([existing_data, new_data], ignore_index=True)
+    
+    # Convert DataFrame to CSV string
+    csv_buffer = StringIO()
+    updated_data.to_csv(csv_buffer, index=False)
+    
+    # Upload updated CSV back to S3
+    s3_client.put_object(Bucket=bucket_name, Key=s3_filename, Body=csv_buffer.getvalue())
 
 # Initialize session state variables if they don't exist
 if 'standard' not in st.session_state:
@@ -175,6 +232,8 @@ if email:
                             st.success(f"Patient Can be Sent to Next Step 🟢")
                         else:
                             st.error(f"Patient is Fit, No Further Care Required 🔴")
+                        # Append the data to the CSV file in S3
+                        append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, None, measured_fev1, measured_fvc, fvc_percent_predicted, None, None, None, rv_percent_est, RV150, RV175, RV200)
                     
             elif has_fvc_pred == 'No':
                 gender = st.radio("Select Gender:", ('Male', 'Female'),horizontal=True,index=None)
@@ -239,6 +298,8 @@ if email:
                             st.success(f"Patient Can be Sent to Next Step 🟢")
                         else:
                             st.error(f"Patient is Fit, No Further Care Required 🔴")
+                        # Append the data to the CSV file in S3
+                        append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, height, measured_fev1, measured_fvc, percent_predicted_fvc, fev1, fvc, fev1_fvc, rv_percent_est, RV150, RV175, RV200)
         elif standard == 'ECSC':
             st.write("Work in Progress. This standard is not available yet.")
 else:
