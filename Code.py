@@ -49,14 +49,14 @@ def append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, heigh
 
     # Download the existing data from S3
     response = s3_client.get_object(Bucket=bucket_name, Key=s3_filename)
-    existing_data = pd.read_csv(response['Body'])
+    existing_data = pd.read_csv(response['Body'],sep='|')
     
     # Append new data to existing data
     updated_data = pd.concat([existing_data, new_data], ignore_index=True)
     
     # Convert DataFrame to CSV string
     csv_buffer = StringIO()
-    updated_data.to_csv(csv_buffer, index=False)
+    updated_data.to_csv(csv_buffer, index=False, sep='|')
     
     # Upload updated CSV back to S3
     s3_client.put_object(Bucket=bucket_name, Key=s3_filename, Body=csv_buffer.getvalue())
