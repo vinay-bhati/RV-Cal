@@ -2,3 +2,5 @@ validate_email
 pandas
 numpy
 streamlit
+boto3
+io
