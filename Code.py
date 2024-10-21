@@ -322,7 +322,7 @@ if email:
                     with col4:
                         measured_fvc = st.number_input("Enter Measured FVC (XX.XX):", min_value=0.0, format="%.2f", step=0.01)
 
-                    Store the button press result in a variable
+                    #Store the button press result in a variable
                     calculate_ECSC = st.button('Calculate ECSC Prediction')
 
                     if calculate_ECSC and age and height and measured_fev1 and measured_fvc:
