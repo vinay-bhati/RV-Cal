@@ -361,29 +361,28 @@ if email:
 
                         col5, col6, col7, col8,col9, col10, col11 = st.columns(7)
                         # Display the calculated values
-                        
-                        st.metric(label="Predicted FVC:", value=f"{pred_fvc}")
-                        #st.write(f"Predicted FVC: {pred_fvc} L")
-                        
-                        st.metric(label="FVC % Predicted:", value=f"{fvc_percent_predicted}")
-                        #st.write(f"FVC % Predicted: {fvc_percent_predicted}%")
+                        with col5:
+                            st.metric(label="Predicted FVC:", value=f"{pred_fvc}")
+                            #st.write(f"Predicted FVC: {pred_fvc} L")
+                        with col6:
+                            st.metric(label="FVC % Predicted:", value=f"{fvc_percent_predicted}")
+                            #st.write(f"FVC % Predicted: {fvc_percent_predicted}%")
+                        with col7:
+                            st.metric(label="FEV1/FVC Ratio:", value=f"{fev1_fvc_ratio}")
+                            #st.write(f"FEV1/FVC Ratio: {fev1_fvc_ratio}%")
+                        with col8:    
+                            st.metric(label="RV % Estimated:", value=f"{rv_percent_est}")
+                            #st.write(f"RV % Estimated: {rv_percent_est}")
+                        with col9:
+                            st.metric(label="RV >150% Probability", value=f"{rv150}%")
+                            #st.write(f"RV >150% Probability: {rv150}%")
+                        with col10:
+                            st.metric(label="RV >175% Probability", value=f"{rv175}%")
+                            #st.write(f"RV >175% Probability: {rv175}%")
+                        with col11:
+                            st.metric(label="RV >200% Probability", value=f"{rv200}%")
+                            #st.write(f"RV >200% Probability: {rv200}%")
 
-                        st.metric(label="FEV1/FVC Ratio:", value=f"{fev1_fvc_ratio}")
-                        #st.write(f"FEV1/FVC Ratio: {fev1_fvc_ratio}%")
-
-                        st.metric(label="RV % Estimated:", value=f"{rv_percent_est}")
-                        #st.write(f"RV % Estimated: {rv_percent_est}")
-
-                        st.metric(label="RV >150% Probability", value=f"{rv150}%")
-                        #st.write(f"RV >150% Probability: {rv150}%")
-
-                        st.metric(label="RV >175% Probability", value=f"{rv175}%")
-                        #st.write(f"RV >175% Probability: {rv175}%")
-
-                        st.metric(label="RV >200% Probability", value=f"{rv200}%")
-                        #st.write(f"RV >200% Probability: {rv200}%")
-
-                    
                     elif calculate_ECSC:
                         st.error("Please fill in all required fields before calculating.")
 else:
