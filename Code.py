@@ -357,7 +357,7 @@ if email:
 
                     if calculate_ECSC and age and height and measured_fev1 and measured_fvc:
                         pred_fvc = calculate_ecsc_fvc(age, height, measured_fev1, measured_fvc, gender, race)
-                        fvc_percent_predicted, fev1_fvc_ratio, rv_percent_est, rv150, rv175, rv200 = calculate_ecsc_metrics(age, height, measured_fev1, pred_fvc, measured_fvc)
+                        fvc_percent_predicted_ecsc, fev1_fvc_ratio, rv_percent_est, rv150, rv175, rv200 = calculate_ecsc_metrics(age, height, measured_fev1, pred_fvc, measured_fvc)
 
                         col5, col6, col7, col8,col9, col10, col11 = st.columns(7)
                         # Display the calculated values
@@ -366,7 +366,7 @@ if email:
                             #st.write(f"Predicted FVC: {pred_fvc} L")
                         with col6:
                             st.metric(label="FVC % Predicted:", value=f"{fvc_percent_predicted}")
-                            #st.write(f"FVC % Predicted: {fvc_percent_predicted}%")
+                            #st.write(f"FVC % Predicted: {fvc_percent_predicted_ecsc}%")
                         with col7:
                             st.metric(label="FEV1/FVC Ratio:", value=f"{fev1_fvc_ratio}")
                             #st.write(f"FEV1/FVC Ratio: {fev1_fvc_ratio}%")
@@ -391,7 +391,7 @@ if email:
                             st.error(f"Patient is Fit, No Further Care Required 🔴")
 
                         # Append the data to the CSV file in S3
-                        append_to_s3(email, rv_threshold, standard, None, gender, age, height, measured_fev1, measured_fvc, fvc_percent_predicted, None, None, None, rv_percent_est, rv150, rv175, rv200,race)
+                        append_to_s3(email, rv_threshold, standard, None, gender, age, height, measured_fev1, measured_fvc, fvc_percent_predicted_ecsc, None, None, None, rv_percent_est, rv150, rv175, rv200, race)
 
 
                     elif calculate_ECSC:
