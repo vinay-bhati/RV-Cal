@@ -24,7 +24,7 @@ def append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, heigh
     # Prepare the CSV row as a string, note the newline at the start
     date_today = date.today().isoformat()
     date_time = datetime.now().isoformat()
-    data_row = f"\n{email}|{rv_threshold}|{standard}|{has_fvc_pred}|{gender}|{age}|{height}|{measured_fev1}|{measured_fvc}|{fvc_percent_predicted}|{round(predicted_fev1, 2) if has_fvc_pred == 'No' else ''}|{round(predicted_fvc, 2) if has_fvc_pred == 'No' else ''}|{round(predicted_fev1_fvc, 2) if has_fvc_pred == 'No' else ''}|{rv_percent_est}|{round(rv150_prob,2)}|{round(rv175_prob,2)}|{round(rv200_prob,2)}|{date_today}|{date_time}"
+    data_row = f"\n{email}|{rv_threshold}|{standard}|{has_fvc_pred}|{gender}|{age}|{height}|{measured_fev1}|{measured_fvc}|{fvc_percent_predicted}|{round(predicted_fev1, 2) if has_fvc_pred == 'No' else ''}|{round(predicted_fvc, 2) if has_fvc_pred == 'No' else ''}|{round(predicted_fev1_fvc, 2) if has_fvc_pred == 'No' else ''}|{rv_percent_est}|{round(rv150_prob,2)}|{round(rv175_prob,2)}|{round(rv200_prob,2)}|{race}|{date_today}|{date_time}"
 
     # Bucket and file details
     bucket_name = st.secrets["aws"]["bucket_name"]
@@ -259,7 +259,7 @@ if email:
                         else:
                             st.error(f"Patient is Fit, No Further Care Required 🔴")
                         # Append the data to the CSV file in S3
-                        append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, None, measured_fev1, measured_fvc, fvc_percent_predicted, None, None, None, rv_percent_est, RV150, RV175, RV200)
+                        append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, None, measured_fev1, measured_fvc, fvc_percent_predicted, None, None, None, rv_percent_est, RV150, RV175, RV200,None)
                     elif evaluate_pressed:
                         st.error("Please fill in all required fields before evaluating.")
                         
@@ -330,7 +330,7 @@ if email:
                         else:
                             st.error(f"Patient is Fit, No Further Care Required 🔴")
                         # Append the data to the CSV file in S3
-                        append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, height, measured_fev1, measured_fvc, percent_predicted_fvc, fev1, fvc, fev1_fvc, rv_percent_est, RV150, RV175, RV200)
+                        append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, height, measured_fev1, measured_fvc, percent_predicted_fvc, fev1, fvc, fev1_fvc, rv_percent_est, RV150, RV175, RV200,None)
 
                     elif calculate_pressed:
                         st.error("Please fill in all required fields before calculating.")
@@ -389,6 +389,10 @@ if email:
                             st.success(f"Patient Can be Sent to Next Step 🟢")
                         else:
                             st.error(f"Patient is Fit, No Further Care Required 🔴")
+
+                        # Append the data to the CSV file in S3
+                        append_to_s3(email, rv_threshold, standard, None, gender, age, height, measured_fev1, measured_fvc, percent_predicted_fvc, None, None, None, rv_percent_est, rv150, rv175, rv200,race)
+
 
                     elif calculate_ECSC:
                         st.error("Please fill in all required fields before calculating.")
