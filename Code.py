@@ -374,7 +374,7 @@ if email:
                         st.metric(label="RV % Estimated:", value=f"{rv_percent_est}")
                         #st.write(f"RV % Estimated: {rv_percent_est}")
 
-                        st.metric(label="RV >150% Probability", value=f"rv150}%")
+                        st.metric(label="RV >150% Probability", value=f"{rv150}%")
                         #st.write(f"RV >150% Probability: {rv150}%")
 
                         st.metric(label="RV >175% Probability", value=f"{rv175}%")
