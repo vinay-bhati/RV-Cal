@@ -365,7 +365,7 @@ if email:
                             st.metric(label="Predicted FVC:", value=f"{pred_fvc}")
                             #st.write(f"Predicted FVC: {pred_fvc} L")
                         with col6:
-                            st.metric(label="FVC % Predicted:", value=f"{fvc_percent_predicted}")
+                            st.metric(label="FVC % Predicted:", value=f"{fvc_percent_predicted_ecsc}")
                             #st.write(f"FVC % Predicted: {fvc_percent_predicted_ecsc}%")
                         with col7:
                             st.metric(label="FEV1/FVC Ratio:", value=f"{fev1_fvc_ratio}")
