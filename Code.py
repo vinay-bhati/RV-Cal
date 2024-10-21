@@ -309,7 +309,7 @@ if email:
             gender = st.radio("Select Sex:", (1, 0), format_func=lambda x: 'Male' if x == 1 else 'Female')
             
             if gender is not None:  # Ensures that race is only shown if gender is selected
-                race = st.radio("Select Race:", (1, 2))
+                race = st.radio("Select Race:", (1, 2), format_func=lambda x: 'White' if x == 1 else 'Black')
                 
                 if race is not None:  # Ensures that the remaining inputs are only shown if race is selected
                     col1, col2, col3, col4 = st.columns(4)
