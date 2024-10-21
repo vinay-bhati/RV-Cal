@@ -384,11 +384,11 @@ if email:
                             #st.write(f"RV >200% Probability: {rv200}%")
                     
                     st.write("Final Result")
-                        # Final Result based on the RV% Est threshold
-                        if rv_percent_est >= rv_threshold:
-                            st.success(f"Patient Can be Sent to Next Step 🟢")
-                        else:
-                            st.error(f"Patient is Fit, No Further Care Required 🔴")
+                    # Final Result based on the RV% Est threshold
+                    if rv_percent_est >= rv_threshold:
+                        st.success(f"Patient Can be Sent to Next Step 🟢")
+                    else:
+                        st.error(f"Patient is Fit, No Further Care Required 🔴")
 
                     elif calculate_ECSC:
                         st.error("Please fill in all required fields before calculating.")
