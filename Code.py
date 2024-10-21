@@ -179,7 +179,7 @@ if email:
                     with col4:
                         fvc_percent_predicted = st.number_input("Enter FVC % Predicted:", min_value=0.0, format="%.1f", step=0.1, key='fvc_percent_pred')
     
-                    if st.button('Evaluate'):
+                    if st.button('Evaluate') and age and measured_fev1 and measured_fvc and fvc_percent_predicted:
                         # Display measured values and provided FVC % Predicted
                         col5, col6, col7, col8= st.columns(4)
                         with col5:
@@ -216,7 +216,9 @@ if email:
                             st.error(f"Patient is Fit, No Further Care Required 🔴")
                         # Append the data to the CSV file in S3
                         append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, None, measured_fev1, measured_fvc, fvc_percent_predicted, None, None, None, rv_percent_est, RV150, RV175, RV200)
-                    
+                    elif st.button('Evaluate'):
+                        st.error("Please fill in all required fields before evaluating.")
+                        
             elif has_fvc_pred == 'No':
                 gender = st.radio("Select Gender:", ('Male', 'Female'),horizontal=True,index=None)
 
