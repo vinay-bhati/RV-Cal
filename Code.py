@@ -390,8 +390,12 @@ if email:
                         else:
                             st.error(f"Patient is Fit, No Further Care Required 🔴")
 
+                        # Map numeric gender and race to descriptive text
+                        gender_text = 'Male' if gender == 1 else 'Female'
+                        race_text = 'White' if race == 1 else 'Black'
+
                         # Append the data to the CSV file in S3
-                        append_to_s3(email, rv_threshold, standard, None, gender, age, height, measured_fev1, measured_fvc, fvc_percent_predicted_ecsc, None, None, None, rv_percent_est, rv150, rv175, rv200, race)
+                        append_to_s3(email, rv_threshold, standard, None, gender_text, age, height, measured_fev1, measured_fvc, fvc_percent_predicted_ecsc, None, None, None, rv_percent_est, rv150, rv175, rv200, race_text)
 
 
                     elif calculate_ECSC:
