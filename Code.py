@@ -391,7 +391,7 @@ if email:
                             st.error(f"Patient is Fit, No Further Care Required 🔴")
 
                         # Append the data to the CSV file in S3
-                        append_to_s3(email, rv_threshold, standard, None, gender, age, height, measured_fev1, measured_fvc, percent_predicted_fvc, None, None, None, rv_percent_est, rv150, rv175, rv200,race)
+                        append_to_s3(email, rv_threshold, standard, None, gender, age, height, measured_fev1, measured_fvc, fvc_percent_predicted, None, None, None, rv_percent_est, rv150, rv175, rv200,race)
 
 
                     elif calculate_ECSC:
