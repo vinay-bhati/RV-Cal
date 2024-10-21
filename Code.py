@@ -126,6 +126,36 @@ def calculate_ecsc_fvc(age, height, fev1, fvc, gender, race):
         return round((0.00536 * age - 0.000265 * (age ** 2) + 0.00013606 * (height ** 2) - 0.3039), 2)
     return "Insufficient data for prediction"
 
+def calculate_ecsc_metrics(age, height, measured_fev1, predicted_fvc, measured_fvc):
+    """Calculate additional respiratory metrics based on user input and predicted FVC."""
+    if measured_fvc and predicted_fvc:
+        fvc_percent_predicted = round((measured_fvc / predicted_fvc) * 100, 3)
+    else:
+        fvc_percent_predicted = None
+
+    # Assuming FEV1/FVC ratio is a straightforward division
+    if measured_fev1 and measured_fvc:
+        fev1_fvc_ratio = round((measured_fev1 / measured_fvc) * 100, 3)
+    else:
+        fev1_fvc_ratio = None
+
+    # Calculate RV % est based on the provided formula
+    if age is not None and measured_fev1 and fvc_percent_predicted and fev1_fvc_ratio:
+        rv_percent_est = round((fvc_percent_predicted * 3.46 - fev1_fvc_ratio * 179.8 -
+                                np.sqrt(fvc_percent_predicted) * 79.53 - age * 0.98 - height * 10.88 + 737.06), 1)
+    else:
+        rv_percent_est = None
+
+    # Calculate probabilities for RV150, RV175, RV200
+    if rv_percent_est is not None:
+        rv150 = round((1 / (1 + np.exp(-1 * (-9.218401 + 0.0572793 * rv_percent_est)))), 3) * 100
+        rv175 = round((1 / (1 + np.exp(-1 * (-9.995177 + 0.0551463 * rv_percent_est)))), 3) * 100
+        rv200 = round((1 / (1 + np.exp(-1 * (-11.32753 + 0.0561363 * rv_percent_est)))), 3) * 100
+    else:
+        rv150, rv175, rv200 = None, None, None
+
+    return fvc_percent_predicted, fev1_fvc_ratio, rv_percent_est, rv150, rv175, rv200
+
 # First command: set page configuration
 st.set_page_config(
     page_title='RV Estimate Calculator',
@@ -327,7 +357,33 @@ if email:
 
                     if calculate_ECSC and age and height and measured_fev1 and measured_fvc:
                         pred_fvc = calculate_ecsc_fvc(age, height, measured_fev1, measured_fvc, gender, race)
-                        st.write(f"Predicted FVC: {pred_fvc} L")
+                        fvc_percent_predicted, fev1_fvc_ratio, rv_percent_est, rv150, rv175, rv200 = calculate_ecsc_metrics(age, height, measured_fev1, pred_fvc, measured_fvc)
+
+                        col5, col6 col7, col8,col9,col10,col11 = st.columns(7)
+                        # Display the calculated values
+                        
+                        st.metric(label="Predicted FVC:", value=f"{pred_fvc}")
+                        #st.write(f"Predicted FVC: {pred_fvc} L")
+                        
+                        st.metric(label="FVC % Predicted:", value=f"{fvc_percent_predicted}")
+                        #st.write(f"FVC % Predicted: {fvc_percent_predicted}%")
+
+                        st.metric(label="FEV1/FVC Ratio:", value=f"{fev1_fvc_ratio}")
+                        #st.write(f"FEV1/FVC Ratio: {fev1_fvc_ratio}%")
+
+                        st.metric(label="RV % Estimated:", value=f"{rv_percent_est}")
+                        #st.write(f"RV % Estimated: {rv_percent_est}")
+
+                        st.metric(label="RV >150% Probability", value=f"rv150}%")
+                        #st.write(f"RV >150% Probability: {rv150}%")
+
+                        st.metric(label="RV >175% Probability", value=f"{rv175}%")
+                        #st.write(f"RV >175% Probability: {rv175}%")
+
+                        st.metric(label="RV >200% Probability", value=f"{rv200}%")
+                        #st.write(f"RV >200% Probability: {rv200}%")
+
+                    
                     elif calculate_ECSC:
                         st.error("Please fill in all required fields before calculating.")
 else:
