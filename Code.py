@@ -328,7 +328,7 @@ if email:
                     if calculate_ECSC and age and height and measured_fev1 and measured_fvc:
                         pred_fvc = calculate_ecsc_fvc(age, height, measured_fev1, measured_fvc, gender, race)
                         st.write(f"Predicted FVC: {pred_fvc} L")
-                    elif calculate_ECSC
+                    elif calculate_ECSC:
                         st.error("Please fill in all required fields before calculating.")
 else:
     st.write("Please enter an email address to continue.")
