@@ -306,10 +306,10 @@ if email:
                         st.error("Please fill in all required fields before calculating.")
                         
         elif standard == 'ECSC':
-            gender = st.radio("Sex (1=Male, 0=Female):", (1, 0), format_func=lambda x: 'Male' if x == 1 else 'Female')
+            gender = st.radio("Select Sex:", (1, 0), format_func=lambda x: 'Male' if x == 1 else 'Female')
             
             if gender is not None:  # Ensures that race is only shown if gender is selected
-                race = st.radio("Race (1=White, 2=Black):", (1, 2))
+                race = st.radio("Select Race:", (1, 2))
                 
                 if race is not None:  # Ensures that the remaining inputs are only shown if race is selected
                     col1, col2, col3, col4 = st.columns(4)
