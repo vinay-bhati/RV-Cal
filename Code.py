@@ -173,11 +173,11 @@ if email:
                     with col1:
                         age = st.number_input("Enter Age (Years):", min_value=3, max_value=95, step=1, key='age_yes')
                     with col2:
-                        measured_fev1 = st.number_input("Enter Measured FEV1 (XX.XX):",format="%.2f", step=0.01, key='fev1_yes')
+                        measured_fev1 = st.number_input("Enter Measured FEV1 (XX.XX):",min_value=0.0,format="%.2f", step=0.01, key='fev1_yes')
                     with col3:
                         measured_fvc = st.number_input("Enter Measured FVC (XX.XX):", min_value=0.0, format="%.2f", step=0.01, key='fvc_yes')
                     with col4:
-                        fvc_percent_predicted = st.number_input("Enter FVC % Predicted:", min_value=0.0, format="%.1f", step=0.1, key='fvc_percent_pred')
+                        fvc_percent_predicted = st.number_input("Enter FVC % Predicted:", min_value=0.0,format="%.1f", step=0.1, key='fvc_percent_pred')
                         
                     # Store the button press result in a variable
                     evaluate_pressed = st.button('Evaluate')
