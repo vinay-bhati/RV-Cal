@@ -114,6 +114,17 @@ def calculate_rv_predicted(rv_percent_est):
     
     return rv150, rv175, rv200
 
+def calculate_ecsc_fvc(age, height, fev1, fvc, gender, race):
+    """Calculate ECSC based Predicted FVC based on the formula."""
+    if gender == 1 and race == 1:
+        return round((0.00064 * age - 0.000269 * (age ** 2) + 0.00018642 * (height ** 2) - 0.1933), 2)
+    elif gender == 0 and race == 1:
+        return round((0.0187 * age - 0.000382 * (age ** 2) + 0.00014815 * (height ** 2) - 0.356), 2)
+    elif gender == 1 and race == 2:
+        return round((-0.01821 * age + 0.00016643 * (height ** 2) - 0.1517), 2)
+    elif gender == 0 and race == 2:
+        return round((0.00536 * age - 0.000265 * (age ** 2) + 0.00013606 * (height ** 2) - 0.3039), 2)
+    return "Insufficient data for prediction"
 
 # First command: set page configuration
 st.set_page_config(
@@ -295,6 +306,20 @@ if email:
                         st.error("Please fill in all required fields before calculating.")
                         
         elif standard == 'ECSC':
-            st.write("Work in Progress. This standard is not available yet.")
+            gender = st.radio("Sex (1=Male, 0=Female):", (1, 0), format_func=lambda x: 'Male' if x == 1 else 'Female')
+            
+            if gender is not None:  # Ensures that race is only shown if gender is selected
+                race = st.radio("Race (1=White, 2=Black):", (1, 2))
+                
+                if race is not None:  # Ensures that the remaining inputs are only shown if race is selected
+                    col1, col2, col3, col4 = st.columns(4)
+                    with col1:
+                        age = st.number_input("Age:", min_value=3, max_value=95, step=1)
+                    with col2:
+                        height = st.number_input("Height (in cm):", min_value=100, max_value=250, step=1)
+                    with col3:
+                        measured_fev1 = st.number_input("Enter Measured FEV1 (XX.XX):", min_value=0.0, format="%.2f", step=0.01)
+                    with col4:
+                        measured_fvc = st.number_input("Enter Measured FVC (XX.XX):", min_value=0.0, format="%.2f", step=0.01)
 else:
     st.write("Please enter an email address to continue.")
