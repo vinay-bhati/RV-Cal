@@ -237,9 +237,12 @@ if email:
                         measured_fev1 = st.number_input("Enter Measured FEV1 (XX.XX):", min_value=0.0, format="%.2f", step=0.01, key='fev1')
                     with col4:
                         measured_fvc = st.number_input("Enter Measured FVC (XX.XX):", min_value=0.0, format="%.2f", step=0.01, key='fvc')
-    
+
+                     # Store the button press result in a variable
+                    calculate_pressed = st.button('Calculate')
+                    
                     # Calculate button can be placed below the inputs or in a new line
-                    if st.button('Calculate'):
+                    if calculate_pressed and age and height and measured_fev1:
                         fev1, fvc, fev1_fvc = calculate_values(age, height, gender)
                         percent_predicted_fev1 = (measured_fev1 / fev1) * 100
                         percent_predicted_fvc = round(measured_fvc / fvc * 100,1) if fvc != 0 else 0
@@ -287,6 +290,10 @@ if email:
                             st.error(f"Patient is Fit, No Further Care Required 🔴")
                         # Append the data to the CSV file in S3
                         append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, height, measured_fev1, measured_fvc, percent_predicted_fvc, fev1, fvc, fev1_fvc, rv_percent_est, RV150, RV175, RV200)
+
+                    elif calculate_pressed:
+                        st.error("Please fill in all required fields before calculating.")
+                        
         elif standard == 'ECSC':
             st.write("Work in Progress. This standard is not available yet.")
 else:
