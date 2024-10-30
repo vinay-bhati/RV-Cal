@@ -349,7 +349,7 @@ if email:
                     with col1:
                         age = st.number_input("Age:", min_value=3, max_value=95, step=1)
                     with col2:
-                        height = st.number_input("Height (in cm):", min_value=100, max_value=250, step=1,format="%.1f")
+                        height = st.number_input("Height (in cm):", min_value=100.0, max_value=250.0, step=1)
                     with col3:
                         measured_fev1 = st.number_input("Enter Measured FEV1 (XX.XX):", min_value=0.0, format="%.2f", step=0.01)
                     with col4:
