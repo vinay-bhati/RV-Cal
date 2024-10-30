@@ -142,7 +142,7 @@ def calculate_ecsc_metrics(age, height, measured_fev1, predicted_fvc, measured_f
 
     # Calculate RV % est based on the provided formula
     if age is not None and measured_fev1 and fvc_percent_predicted and fev1_fvc_ratio:
-        rv_percent_est = round((fvc_percent_predicted * 3.46 - fev1_fvc_ratio * 179.8 -
+        rv_percent_est = round((fvc_percent_predicted * 3.46 - round(fev1_fvc_ratio, 3) * 179.8 -
                                 np.sqrt(fvc_percent_predicted) * 79.53 - age * 0.98 - gender * 10.88 + 737.06), 1)
     else:
         rv_percent_est = None
