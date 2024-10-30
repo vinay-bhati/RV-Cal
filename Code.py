@@ -169,13 +169,13 @@ st.markdown("""
 <style>
 /* Targeting paragraphs within the Markdown container for widget labels */
 div[data-testid="stMarkdownContainer"] p {
-    font-size: 18px !important;  /* Increase font size of labels */
+    font-size: 16px !important;  /* Increase font size of labels */
     font-weight: bold !important;  /* Make text bold */
 }
 
 /* Customize input fields to increase font size */
 input, select, textarea {
-    font-size: 18px !important;  /* Increase font size in input fields */
+    font-size: 16px !important;  /* Increase font size in input fields */
     height: 50px !important;  /* Make input fields taller for better interaction */
 }
 
@@ -186,8 +186,11 @@ button {
 }
 /* Customizing the font size for metric values */
 [data-testid="stMetricValue"] > div {
-    font-size: 20px !important;  /* Set your desired font size here */
-}
+    font-size: 16px !important;  /* Set your desired font size here */
+}     
+h1 {
+    font-size: 30px;  /* Larger font size for headings */
+} 
 </style>
 """, unsafe_allow_html=True)
 
