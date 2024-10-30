@@ -135,7 +135,8 @@ def calculate_ecsc_metrics(age, height, measured_fev1, predicted_fvc, measured_f
 
     # Assuming FEV1/FVC ratio is a straightforward division
     if measured_fev1 and measured_fvc:
-        fev1_fvc_ratio = round((measured_fev1 / measured_fvc), 3)
+        local_ration = measured_fev1 / measured_fvc
+       fev1_fvc_ratio =  math.ceil(local_ration * 1000) / 1000
     else:
         fev1_fvc_ratio = None
 
