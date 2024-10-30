@@ -129,7 +129,7 @@ def calculate_ecsc_fvc(age, height, fev1, fvc, gender, race):
 def calculate_ecsc_metrics(age, height, measured_fev1, predicted_fvc, measured_fvc):
     """Calculate additional respiratory metrics based on user input and predicted FVC."""
     if measured_fvc and predicted_fvc:
-        fvc_percent_predicted = round((measured_fvc / predicted_fvc) * 100, 3)
+        fvc_percent_predicted = round((measured_fvc / predicted_fvc) * 100, 1)
     else:
         fvc_percent_predicted = None
 
