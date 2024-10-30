@@ -236,6 +236,7 @@ if email:
                         with col8:
                             # Calculate FEV1/FVC ratio from measured values and display
                             measured_fev1_fvc = measured_fev1 / measured_fvc if measured_fvc != 0 else 0
+                            measured_fev1_fvc =  math.ceil(measured_fev1_fvc * 1000) / 1000
                             st.metric(label="Measured FEV1/FVC", value=f"{measured_fev1_fvc:.3f}")
                         
                         col9, col10, col11,col12 = st.columns(4)
@@ -309,6 +310,7 @@ if email:
                         with col7:
                             # Calculate FEV1/FVC ratio from measured values and display
                             measured_fev1_fvc = measured_fev1 / measured_fvc if measured_fvc != 0 else 0
+                            measured_fev1_fvc =  math.ceil(measured_fev1_fvc * 1000) / 1000
                             st.metric(label="Measured FEV1/FVC", value=f"{measured_fev1_fvc:.2f}")
                         rv_percent_est = calculate_rv_est(percent_predicted_fvc, measured_fev1_fvc, age, gender)
                         # Calculate RV % Predicted Prevalence
