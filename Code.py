@@ -230,7 +230,7 @@ if email:
                     if evaluate_pressed and age and measured_fev1 and measured_fvc and fvc_percent_predicted:
                         measured_fev1_fvc = measured_fev1 / measured_fvc if measured_fvc != 0 else 0
                         measured_fev1_fvc =  math.ceil(measured_fev1_fvc * 1000) / 1000
-                        st.metric(label="Measured FEV1/FVC", value=f"{measured_fev1_fvc:.3f}")
+                        
                         # # Display measured values and provided FVC % Predicted
                         # col5, col6, col7, col8= st.columns(4)
                         # with col5:
