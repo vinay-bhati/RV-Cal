@@ -371,7 +371,7 @@ if email:
                         pred_fvc = calculate_ecsc_fvc(age, height, measured_fev1, measured_fvc, gender, race)
                         fvc_percent_predicted_ecsc, fev1_fvc_ratio, rv_percent_est, rv150, rv175, rv200 = calculate_ecsc_metrics(age, height, measured_fev1, pred_fvc, measured_fvc)
 
-                        col8, col9, col10, col11 = st.columns(7)
+                        col8, col9, col10, col11 = st.columns(4)
                         # Display the calculated values
                         # with col5:
                         #     st.metric(label="Predicted FVC:", value=f"{pred_fvc}")
