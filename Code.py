@@ -316,7 +316,7 @@ if email:
                             st.metric(label="Measured FEV1", value=f"{measured_fev1:.2f} L")
                         with col6:
                             st.metric(label="Measured FVC", value=f"{measured_fvc:.2f} L")
-                        with col7:
+                        # with col7:
                             # # Calculate FEV1/FVC ratio from measured values and display
                             # measured_fev1_fvc = measured_fev1 / measured_fvc if measured_fvc != 0 else 0
                             # measured_fev1_fvc =  math.ceil(measured_fev1_fvc * 1000) / 1000
