@@ -295,17 +295,20 @@ if email:
                         fev1, fvc, fev1_fvc = calculate_values(age, height, gender)
                         percent_predicted_fev1 = (measured_fev1 / fev1) * 100
                         percent_predicted_fvc = round(measured_fvc / fvc * 100,1) if fvc != 0 else 0
+                        # Calculate FEV1/FVC ratio from measured values and display
+                        measured_fev1_fvc = measured_fev1 / measured_fvc if measured_fvc != 0 else 0
+                        measured_fev1_fvc =  math.ceil(measured_fev1_fvc * 1000) / 1000
     
-                        col1, col2, col3, col4 = st.columns(4)  # Create four columns
+                        # col1, col2, col3, col4 = st.columns(4)  # Create four columns
                         
-                        with col1:
-                            st.metric(label="Predicted FEV1", value=f"{fev1:.2f} L")
-                        with col2:
-                            st.metric(label="Predicted FVC", value=f"{fvc:.2f} L")
-                        with col3:
-                            st.metric(label="Predicted FEV1/FVC", value=f"{fev1_fvc:.2f}")
-                        with col4:
-                            st.metric(label="% Predicted FVC", value=f"{percent_predicted_fvc:.1f}")
+                        # with col1:
+                        #     st.metric(label="Predicted FEV1", value=f"{fev1:.2f} L")
+                        # with col2:
+                        #     st.metric(label="Predicted FVC", value=f"{fvc:.2f} L")
+                        # with col3:
+                        #     st.metric(label="Predicted FEV1/FVC", value=f"{fev1_fvc:.2f}")
+                        # with col4:
+                        #     st.metric(label="% Predicted FVC", value=f"{percent_predicted_fvc:.1f}")
     
                         col5, col6, col7, col8 = st.columns(4)
                         
@@ -314,17 +317,17 @@ if email:
                         with col6:
                             st.metric(label="Measured FVC", value=f"{measured_fvc:.2f} L")
                         with col7:
-                            # Calculate FEV1/FVC ratio from measured values and display
-                            measured_fev1_fvc = measured_fev1 / measured_fvc if measured_fvc != 0 else 0
-                            measured_fev1_fvc =  math.ceil(measured_fev1_fvc * 1000) / 1000
-                            st.metric(label="Measured FEV1/FVC", value=f"{measured_fev1_fvc:.3f}")
+                            # # Calculate FEV1/FVC ratio from measured values and display
+                            # measured_fev1_fvc = measured_fev1 / measured_fvc if measured_fvc != 0 else 0
+                            # measured_fev1_fvc =  math.ceil(measured_fev1_fvc * 1000) / 1000
+                            # st.metric(label="Measured FEV1/FVC", value=f"{measured_fev1_fvc:.3f}")
                         rv_percent_est = calculate_rv_est(percent_predicted_fvc, measured_fev1_fvc, age, gender)
                         # Calculate RV % Predicted Prevalence
                         RV150, RV175, RV200 = calculate_rv_predicted(rv_percent_est)
                         # Adding a row to display RV % est
                         col9, col10, col11, col12 = st.columns(4)
-                        with col9:
-                            st.metric(label="RV % Estimate", value=f"{rv_percent_est:.1f}")
+                        # with col9:
+                        #     st.metric(label="RV % Estimate", value=f"{rv_percent_est:.1f}")
                         with col10:
                             st.metric(label="RV >150% Probability", value=f"{RV150:.1f}%")
                         with col11:
@@ -332,12 +335,12 @@ if email:
                         with col12:
                             st.metric(label="RV >200% Probability", value=f"{RV200:.1f}%")
     
-                        st.write("Final Result")
-                        # Final Result based on the RV% Est threshold
-                        if rv_percent_est >= rv_threshold:
-                            st.success(f"Patient Can be Sent to Next Step 🟢")
-                        else:
-                            st.error(f"Patient is Fit, No Further Care Required 🔴")
+                        # st.write("Final Result")
+                        # # Final Result based on the RV% Est threshold
+                        # if rv_percent_est >= rv_threshold:
+                        #     st.success(f"Patient Can be Sent to Next Step 🟢")
+                        # else:
+                        #     st.error(f"Patient is Fit, No Further Care Required 🔴")
                         # Append the data to the CSV file in S3
                         append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, height, measured_fev1, measured_fvc, percent_predicted_fvc, fev1, fvc, fev1_fvc, rv_percent_est, RV150, RV175, RV200,None)
 
