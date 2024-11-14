@@ -371,7 +371,7 @@ if email:
                         pred_fvc = calculate_ecsc_fvc(age, height, measured_fev1, measured_fvc, gender, race)
                         fvc_percent_predicted_ecsc, fev1_fvc_ratio, rv_percent_est, rv150, rv175, rv200 = calculate_ecsc_metrics(age, height, measured_fev1, pred_fvc, measured_fvc)
 
-                        '''col5, col6, col7,''' col8, col9, col10, col11 = st.columns(7)
+                        col8, col9, col10, col11 = st.columns(7)
                         # Display the calculated values
                         # with col5:
                         #     st.metric(label="Predicted FVC:", value=f"{pred_fvc}")
@@ -395,12 +395,12 @@ if email:
                             st.metric(label="RV >200% Probability", value=f"{rv200}%")
                             #st.write(f"RV >200% Probability: {rv200}%")
                     
-                        st.write("Final Result")
-                        # Final Result based on the RV% Est threshold
-                        if rv_percent_est >= rv_threshold:
-                            st.success(f"Patient Can be Sent to Next Step 🟢")
-                        else:
-                            st.error(f"Patient is Fit, No Further Care Required 🔴")
+                        # st.write("Final Result")
+                        # # Final Result based on the RV% Est threshold
+                        # if rv_percent_est >= rv_threshold:
+                        #     st.success(f"Patient Can be Sent to Next Step 🟢")
+                        # else:
+                        #     st.error(f"Patient is Fit, No Further Care Required 🔴")
 
                         # Map numeric gender and race to descriptive text
                         gender_text = 'Male' if gender == 1 else 'Female'
