@@ -204,7 +204,7 @@ if email:
         st.error("Invalid email address. Please enter a valid email.")
     else:
         # Place this where you define your interface components
-        rv_threshold = st.slider("Select RV % Est Threshold for Patient Care:", 100, 200, 150)
+        #rv_threshold = st.slider("Select RV % Est Threshold for Patient Care:", 100, 200, 150)
         standard = st.radio("Select Standard:", ('GLI', 'ECSC'),horizontal=True,index=None)
 
         if standard == 'GLI':
