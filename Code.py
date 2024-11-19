@@ -386,14 +386,17 @@ if email:
                         #     st.metric(label="RV % Estimated:", value=f"{rv_percent_est}")
                         #     #st.write(f"RV % Estimated: {rv_percent_est}")
                         with col9:
-                            st.metric(label="RV >150% Probability", value=f"{rv150}%")
+                            #st.metric(label="RV >150% Probability", value=f"{rv150}%")
                             #st.write(f"RV >150% Probability: {rv150}%")
+                            st.metric(label="RV >150% Probability", value=f"{rv150:.1f}%")
                         with col10:
-                            st.metric(label="RV >175% Probability", value=f"{rv175}%")
+                            #st.metric(label="RV >175% Probability", value=f"{rv175}%")
                             #st.write(f"RV >175% Probability: {rv175}%")
+                            st.metric(label="RV >175% Probability", value=f"{rv175:.1f}%")
                         with col11:
-                            st.metric(label="RV >200% Probability", value=f"{rv200}%")
+                            #st.metric(label="RV >200% Probability", value=f"{rv200}%")
                             #st.write(f"RV >200% Probability: {rv200}%")
+                            st.metric(label="RV >200% Probability", value=f"{rv200:.1f}%")
                     
                         # st.write("Final Result")
                         # # Final Result based on the RV% Est threshold
