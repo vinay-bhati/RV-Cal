@@ -267,7 +267,7 @@ def process_gli_batch_no_fvc_pred(file):
         for index, row in df.iterrows():
             try:
                 # Ensure all required data is present
-                if pd.isna(row['email']) or pd.isna(row['age']) or pd.isna(row['gender']) or \
+                if pd.isna(row['age']) or pd.isna(row['gender']) or \
                    pd.isna(row['height']) or pd.isna(row['measured_fev1']) or pd.isna(row['measured_fvc']):
                     raise ValueError("Missing data in one or more required fields at row {}".format(index + 1))
 
@@ -296,6 +296,7 @@ def process_gli_batch_no_fvc_pred(file):
                     "measured_fev1": measured_fev1,
                     "measured_fvc": measured_fvc,
                     "fev1_fvc_ratio": measured_fev1_fvc,
+                    "FVC % predicted":percent_predicted_fvc,
                     "rv150": rv150,
                     "rv175": rv175,
                     "rv200": rv200
