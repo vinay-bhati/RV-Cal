@@ -569,7 +569,7 @@ if process_type == 'Single':
     
                         if calculate_ECSC and age and height and measured_fev1 and measured_fvc:
                             pred_fvc = calculate_ecsc_fvc(age, height, measured_fev1, measured_fvc, gender, race)
-                            fvc_percent_predicted_ecsc, fev1_fvc_ratio, rv_percent_est, rv150, rv175, rv200 = calculate_ecsc_metrics(age, height, measured_fev1, pred_fvc, measured_fvc)
+                            fvc_percent_predicted_ecsc, fev1_fvc_ratio, rv_percent_est, rv150, rv175, rv200 = calculate_ecsc_metrics(age, height, measured_fev1, pred_fvc, measured_fvc,gender,race)
     
                             col8, col9, col10, col11 = st.columns(4)
                             # Display the calculated values
