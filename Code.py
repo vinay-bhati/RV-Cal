@@ -488,35 +488,36 @@ elif process_type == 'Batch':
         is_email_valid = validate_email(email)
         if not is_email_valid:
             st.error("Invalid email address. Please enter a valid email.")
-    standard = st.radio("Select Standard:", ('GLI', 'ECSC'))
-    if standard == 'GLI':
-        has_fvc_pred = st.radio("Do You Have FVC % Predicted?", ('Yes', 'No'),horizontal=True,index=None)
-        if has_fvc_pred == 'Yes':
-            st.markdown("""
-    ### Batch Processing Instructions
-    - **File Type:** Excel file (.xlsx)
-    - **Required Columns:** age, gender, measured_fev1, measured_fvc, fvc_percent_predicted
-    - **Data Format:**
-      - **age:** 3 - 95
-      - **gender:**('Male' or 'Female')
-      - **measured_fev1:** Format(XX.XX) Max 2 Decimal Places
-      - **measured_fvc:** Format(XX.XX) Max 2 Decimal Places
-      - **fvc_percent_predicted:** Format(XX.X) Max 1 Decimal Place
-      
-    Please ensure that your file adheres to the above format to avoid processing errors.
-    """)
-            file = st.file_uploader("Upload Excel File", type=['xlsx'])
-            if file and st.button('Process Batch File'):
-                processed_data = process_gli_batch_excel(file)
-                if processed_data is not None and not processed_data.empty:
-                    processed_data_csv = processed_data.to_csv(index=False).encode('utf-8')
-                    st.download_button(
-                        label="Download Processed Data",
-                        data=processed_data_csv,
-                        file_name='processed_data.csv',
-                        mime='text/csv',
-                    )
         else:
-            pass
-    elif standard == 'ECSC':
-        print('In Progres')
+            standard = st.radio("Select Standard:", ('GLI', 'ECSC'))
+            if standard == 'GLI':
+                has_fvc_pred = st.radio("Do You Have FVC % Predicted?", ('Yes', 'No'),horizontal=True,index=None)
+                if has_fvc_pred == 'Yes':
+                    st.markdown("""
+            ### Batch Processing Instructions
+            - **File Type:** Excel file (.xlsx)
+            - **Required Columns:** age, gender, measured_fev1, measured_fvc, fvc_percent_predicted
+            - **Data Format:**
+              - **age:** 3 - 95
+              - **gender:**('Male' or 'Female')
+              - **measured_fev1:** Format(XX.XX) Max 2 Decimal Places
+              - **measured_fvc:** Format(XX.XX) Max 2 Decimal Places
+              - **fvc_percent_predicted:** Format(XX.X) Max 1 Decimal Place
+              
+            Please ensure that your file adheres to the above format to avoid processing errors.
+            """)
+                    file = st.file_uploader("Upload Excel File", type=['xlsx'])
+                    if file and st.button('Process Batch File'):
+                        processed_data = process_gli_batch_excel(file)
+                        if processed_data is not None and not processed_data.empty:
+                            processed_data_csv = processed_data.to_csv(index=False).encode('utf-8')
+                            st.download_button(
+                                label="Download Processed Data",
+                                data=processed_data_csv,
+                                file_name='processed_data.csv',
+                                mime='text/csv',
+                            )
+                else:
+                    pass
+            elif standard == 'ECSC':
+                print('In Progres')
