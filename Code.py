@@ -507,7 +507,7 @@ elif process_type == 'Batch':
             Please ensure that your file adheres to the above format to avoid processing errors.
             """)
                     st.markdown("""
-            ## Download Sample Excel Template
+            #### Download Sample Excel Template
             
             To ensure your file has the correct format, download and use this [Download Excel](https://github.com/yourusername/yourrepository/raw/main/path/to/yourfile.xlsx).
             """, unsafe_allow_html=True)
