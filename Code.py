@@ -195,10 +195,10 @@ h1 {
 """, unsafe_allow_html=True)
 
 st.title('RV Estimate Calculator')
+email = st.text_input("Enter email ID:")
 process_type = st.radio("Choose the type of process:", ('Single', 'Batch'),horizontal=True,index=None)
 
 if process_type == 'Single':
-    email = st.text_input("Enter email ID:")
     
     if email:
         is_email_valid = validate_email(email)
