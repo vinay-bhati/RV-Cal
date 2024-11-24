@@ -501,5 +501,5 @@ elif process_type == 'Batch':
                     )
         else:
             pass
-    elif standard = 'ECSC':
+    elif standard == 'ECSC':
         print('In Progres')
