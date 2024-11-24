@@ -194,6 +194,70 @@ h1 {
 </style>
 """, unsafe_allow_html=True)
 
+def process_gli_batch_excel(file):
+    # Read the uploaded Excel file into a DataFrame
+    try:
+        df = pd.read_excel(file, engine='openpyxl')
+    except Exception as e:
+        st.error(f"Failed to read the Excel file: {e}")
+        return
+
+    # Initialize list to hold results and counters for successes and errors
+    results = []
+    success_count = 0
+    error_count = 0
+    
+    # Iterate over DataFrame rows
+    for index, row in df.iterrows():
+        try:
+            # Ensure all required data is present
+            if pd.isna(row['age']) or pd.isna(row['gender']) or \
+               pd.isna(row['measured_fev1']) or pd.isna(row['measured_fvc']) or pd.isna(row['fvc_percent_predicted']):
+                raise ValueError("Missing data in one or more required fields.")
+
+            email1 = email
+            age = int(row['age'])
+            gender = row['gender']
+            measured_fev1 = float(row['measured_fev1'])
+            measured_fvc = float(row['measured_fvc'])
+            fvc_percent_predicted = float(row['fvc_percent_predicted'])
+
+            measured_fev1_fvc = measured_fev1 / measured_fvc if measured_fvc != 0 else 0
+            measured_fev1_fvc = round(measured_fev1_fvc, 3)
+            
+            rv_percent_est = calculate_rv_est(fvc_percent_predicted, measured_fev1_fvc, age, gender)
+            rv150, rv175, rv200 = calculate_rv_predicted(rv_percent_est)
+
+            results.append({
+                "email": email1,
+                "age": age,
+                "gender": gender,
+                "measured_fev1": measured_fev1,
+                "measured_fvc": measured_fvc,
+                "fvc_percent_predicted": fvc_percent_predicted,
+                "measured_fev1_fvc": measured_fev1_fvc,
+                #"rv_percent_est": rv_percent_est,
+                "rv150": rv150,
+                "rv175": rv175,
+                "rv200": rv200
+            })
+            success_count += 1
+
+        except Exception as e:
+            error_count += 1
+            st.write(f"Error processing record {index+1}: {e}")
+
+    # Convert results to DataFrame
+    results_df = pd.DataFrame(results)
+    
+    # Display results of processing
+    st.success(f"Successfully processed: {success_count} records")
+    if error_count > 0:
+        st.error(f"Failed to process: {error_count} records")
+    
+    return results_df
+
+
 st.title('RV Estimate Calculator')
 email = st.text_input("Enter email ID:")
 process_type = st.radio("Choose the type of process:", ('Single', 'Batch'),horizontal=True,index=None)
@@ -421,3 +485,21 @@ if process_type == 'Single':
         st.write("Please enter an email address to continue.")
 elif process_type == 'Batch':
     standard = st.radio("Select Standard:", ('GLI', 'ECSC'))
+    if standard == 'GLI':
+        has_fvc_pred = st.radio("Do You Have FVC % Predicted?", ('Yes', 'No'),horizontal=True,index=None)
+        if has_fvc_pred == 'Yes':
+            file = st.file_uploader("Upload Excel File", type=['xlsx'])
+            if file and st.button('Process Batch File'):
+                processed_data = process_gli_batch_excel(file)
+                if processed_data is not None and not processed_data.empty:
+                    processed_data_csv = processed_data.to_csv(index=False).encode('utf-8')
+                    st.download_button(
+                        label="Download Processed Data",
+                        data=processed_data_csv,
+                        file_name='processed_data.csv',
+                        mime='text/csv',
+                    )
+        else:
+            pass
+    elif standard = 'ECSC':
+        print('In Progres')
