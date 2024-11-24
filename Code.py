@@ -319,6 +319,63 @@ def process_gli_batch_no_fvc_pred(file):
         return None
 
 
+def process_ecsc_batch(file):
+    try:
+        df = pd.read_excel(file, engine='openpyxl')
+    except Exception as e:
+        st.error(f"Failed to read the Excel file: {e}")
+        return None
+
+    results = []
+    success_count = 0
+    error_count = 0
+
+    for index, row in df.iterrows():
+        try:
+            if pd.isna(row['age']) or pd.isna(row['gender']) or \
+               pd.isna(row['height']) or pd.isna(row['measured_fev1']) or pd.isna(row['measured_fvc']) or pd.isna(row['race']):
+                raise ValueError("Missing data in one or more required fields.")
+
+            email3 = email
+            age = int(row['age'])
+            gender = row['gender'].strip().title()  # Normalize input to handle case variations
+            height = float(row['height'])
+            measured_fev1 = float(row['measured_fev1'])
+            measured_fvc = float(row['measured_fvc'])
+            race = row['race'].strip().title()
+
+            # Convert text entries for gender and race to integers
+            gender_numeric = 1 if gender == 'Male' else 0
+            race_numeric = 1 if race == 'White' else 2
+
+            pred_fvc = calculate_ecsc_fvc(age, height, measured_fev1, measured_fvc, gender_numeric, race_numeric)
+            fvc_percent_predicted, fev1_fvc_ratio, rv_percent_est, rv150, rv175, rv200 = calculate_ecsc_metrics(age, height, measured_fev1, pred_fvc, measured_fvc)
+
+            results.append({
+                "email": email3,
+                "age": age,
+                "gender": gender,
+                "height": height,
+                "measured_fev1": measured_fev1,
+                "measured_fvc": measured_fvc,
+                #"pred_fvc": pred_fvc,
+                "fvc_percent_predicted": fvc_percent_predicted,
+                "fev1_fvc_ratio": fev1_fvc_ratio,
+                "rv150": rv150,
+                "rv175": rv175,
+                "rv200": rv200
+            })
+            success_count += 1
+
+        except Exception as e:
+            error_count += 1
+            st.error(f"Error processing record {index+1}: {e}")
+
+    results_df = pd.DataFrame(results)
+    st.success(f"Successfully processed: {success_count} records")
+    st.error(f"Failed to process: {error_count} records")
+    return results_df
+
 st.title('RV Estimate Calculator')
 email = st.text_input("Enter email ID:")
 process_type = st.radio("Choose the type of process:", ('Single', 'Batch'),horizontal=True,index=None)
@@ -616,7 +673,37 @@ elif process_type == 'Batch':
                                 mime='text/csv'
                             )
             elif standard == 'ECSC':
-                print('In Progres')
+                st.markdown("""
+                ### Batch Processing Instructions
+                - **File Type:** Excel file (.xlsx)
+                - **Required Columns:** email, age, gender, height, measured_fev1, measured_fvc, race
+                - **Data Format:**
+                  - **age:** Integer (3 - 95)
+                  - **gender:** Text ('Male' or 'Female')
+                  - **height:** Float (format x.x or x.xx, e.g., 175.5)
+                  - **measured_fev1:** Float (format x.xx, e.g., 2.34)
+                  - **measured_fvc:** Float (format x.xx, e.g., 3.45)
+                  - **race:** Text ('White' or 'Black')
+                
+                Please ensure that your file adheres to the above format to avoid processing errors.
+                """)
+                
+                st.markdown("""
+                #### Download Sample Excel Template
+                
+                To help you prepare your data correctly, download and use this [Download Excel](https://github.com/vinay-bhati/RV-Cal/raw/refs/heads/main/Sample_GLI.xlsx) template.
+                """, unsafe_allow_html=True)
+                file = st.file_uploader("Upload Excel File", type=['xlsx'])
+                if file and st.button('Process Batch File for ECSC'):
+                    processed_data = process_ecsc_batch(file)
+                    if processed_data is not None and not processed_data.empty:
+                        processed_data_csv = processed_data.to_csv(index=False).encode('utf-8')
+                        st.download_button(
+                            label="Download Processed Data as CSV",
+                            data=processed_data_csv,
+                            file_name='processed_ecsc_data.csv',
+                            mime='text/csv'
+                        )
 else:
         st.write("Please enter an email address to continue.")
 
