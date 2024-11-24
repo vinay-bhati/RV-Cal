@@ -371,6 +371,7 @@ def process_ecsc_batch(file):
                 "age": age,
                 "gender": gender,
                 "height": height,
+                "race":race,
                 "measured_fev1": measured_fev1,
                 "measured_fvc": measured_fvc,
                 "fvc_percent_predicted": fvc_percent_predicted,
