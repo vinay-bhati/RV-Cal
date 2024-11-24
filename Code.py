@@ -708,7 +708,7 @@ elif process_type == 'Batch':
                 st.markdown("""
                 #### Download Sample Excel Template
                 
-                To help you prepare your data correctly, download and use this [Download Excel](https://github.com/vinay-bhati/RV-Cal/raw/refs/heads/main/Sample_GLI.xlsx) template.
+                To help you prepare your data correctly, download and use this [Download Excel](https://github.com/vinay-bhati/RV-Cal/raw/refs/heads/main/Sample_ECSC.xlsx) template.
                 """, unsafe_allow_html=True)
                 file = st.file_uploader("Upload Excel File", type=['xlsx'])
                 if file and st.button('Process Batch File'):
