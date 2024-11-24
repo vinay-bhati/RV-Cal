@@ -332,19 +332,27 @@ def process_ecsc_batch(file):
 
     for index, row in df.iterrows():
         try:
+            # Validate and normalize input data
             if pd.isna(row['age']) or pd.isna(row['gender']) or \
-               pd.isna(row['height']) or pd.isna(row['measured_fev1']) or pd.isna(row['measured_fvc']) or pd.isna(row['race']):
+               pd.isna(row['height']) or pd.isna(row['measured_fev1']) or \
+               pd.isna(row['measured_fvc']) or pd.isna(row['race']):
                 raise ValueError("Missing data in one or more required fields.")
 
-            email3 = email
+            email = row.get('email', 'no-email-provided')
             age = int(row['age'])
-            gender = row['gender'].strip().title()  # Normalize input to handle case variations
+            gender = row['gender'].strip().title()  # Normalize gender to handle case variations
             height = float(row['height'])
             measured_fev1 = float(row['measured_fev1'])
             measured_fvc = float(row['measured_fvc'])
-            race = row['race'].strip().title()
+            race = row['race'].strip().title()  # Normalize race to handle case variations
 
-            # Convert text entries for gender and race to integers
+            # Validate gender and race values
+            if gender not in ['Male', 'Female']:
+                raise ValueError(f"Invalid gender value: {gender}")
+            if race not in ['White', 'Black']:
+                raise ValueError(f"Invalid race value: {race}")
+
+            # Map gender and race to numeric values for calculations
             gender_numeric = 1 if gender == 'Male' else 0
             race_numeric = 1 if race == 'White' else 2
 
@@ -352,13 +360,12 @@ def process_ecsc_batch(file):
             fvc_percent_predicted, fev1_fvc_ratio, rv_percent_est, rv150, rv175, rv200 = calculate_ecsc_metrics(age, height, measured_fev1, pred_fvc, measured_fvc)
 
             results.append({
-                "email": email3,
+                "email": email,
                 "age": age,
                 "gender": gender,
                 "height": height,
                 "measured_fev1": measured_fev1,
                 "measured_fvc": measured_fvc,
-                #"pred_fvc": pred_fvc,
                 "fvc_percent_predicted": fvc_percent_predicted,
                 "fev1_fvc_ratio": fev1_fvc_ratio,
                 "rv150": rv150,
@@ -369,11 +376,13 @@ def process_ecsc_batch(file):
 
         except Exception as e:
             error_count += 1
-            st.error(f"Error processing record {index+1}: {e}")
+            st.error(f"Error processing record {index + 1}: {e}")
 
     results_df = pd.DataFrame(results)
     st.success(f"Successfully processed: {success_count} records")
-    st.error(f"Failed to process: {error_count} records")
+    if error_count > 0:
+        st.error(f"Failed to process: {error_count} records")
+
     return results_df
 
 st.title('RV Estimate Calculator')
