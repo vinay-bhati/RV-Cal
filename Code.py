@@ -488,6 +488,19 @@ elif process_type == 'Batch':
     if standard == 'GLI':
         has_fvc_pred = st.radio("Do You Have FVC % Predicted?", ('Yes', 'No'),horizontal=True,index=None)
         if has_fvc_pred == 'Yes':
+            st.markdown("""
+    ### Batch Processing Instructions
+    - **File Type:** Excel file (.xlsx)
+    - **Required Columns:** email, age, gender, measured_fev1, measured_fvc, fvc_percent_predicted
+    - **Data Format:**
+      - **email:** Text
+      - **age:** Integer
+      - **gender:** Text ('Male' or 'Female')
+      - **measured_fev1:** Float (format x.xx)
+      - **measured_fvc:** Float (format x.xx)
+      - **fvc_percent_predicted:** Float (format x.x)
+    Please ensure that your file adheres to the above format to avoid processing errors.
+    """)
             file = st.file_uploader("Upload Excel File", type=['xlsx'])
             if file and st.button('Process Batch File'):
                 processed_data = process_gli_batch_excel(file)
