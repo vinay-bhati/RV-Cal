@@ -420,4 +420,4 @@ if process_type == 'Single':
     else:
         st.write("Please enter an email address to continue.")
 elif process_type == 'Batch':
-    continue
+    standard = st.radio("Select Standard:", ('GLI', 'ECSC'))
