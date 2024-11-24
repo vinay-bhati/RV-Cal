@@ -497,7 +497,8 @@ elif process_type == 'Batch':
       - **gender:**('Male' or 'Female')
       - **measured_fev1:** XX.XX
       - **measured_fvc:** XX.XX
-      - **fvc_percent_predicted:** XX.XX 
+      - **fvc_percent_predicted:** XX.XX
+      
     Please ensure that your file adheres to the above format to avoid processing errors.
     """)
             file = st.file_uploader("Upload Excel File", type=['xlsx'])
