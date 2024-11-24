@@ -393,7 +393,7 @@ def process_ecsc_batch(file):
 
     return results_df
     
-st.title('RV Estimate Calculator')
+st.title('RV ESTIMATE CALCULATOR')
 email = st.text_input("Enter email ID:")
 process_type = st.radio("Choose the type of process:", ('Single', 'Batch'),horizontal=True,index=None)
 
