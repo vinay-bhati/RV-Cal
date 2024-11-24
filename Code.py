@@ -317,28 +317,6 @@ def process_gli_batch_no_fvc_pred(file):
         st.error(f"Failed to read the Excel file: {e}")
         return None
 
-# Adding the batch processing to your Streamlit page
-elif has_fvc_pred == 'No':
-    st.markdown("""
-        ### Upload your batch file for GLI without FVC % Predicted
-        - Make sure your file includes columns for email, age, gender, height, measured_fev1, and measured_fvc.
-        - File should be in .xlsx format.
-    """)
-    file = st.file_uploader("Upload Excel File", type=['xlsx'])
-    if file and st.button('Process Batch File'):
-        processed_data = process_gli_batch_no_fvc_pred(file)
-        if processed_data is not None and not processed_data.empty:
-            output = BytesIO()
-            with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-                processed_data.to_excel(writer, index=False, sheet_name='Processed Data')
-            output.seek(0)
-            st.download_button(
-                label="Download Processed Data as Excel",
-                data=output,
-                file_name='processed_data.xlsx',
-                mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-            )
-
 
 st.title('RV Estimate Calculator')
 email = st.text_input("Enter email ID:")
