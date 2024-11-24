@@ -509,7 +509,7 @@ elif process_type == 'Batch':
                     st.markdown("""
             #### Download Sample Excel Template
             
-            To ensure your file has the correct format, download and use this [Download Excel](https://github.com/vinay-bhati/RV-Cal/blob/d79adf200471bc124ce52bede8fdc600a251f83c/Sample_GLI_Has_Fvc_Percent_Predicted.xlsx).
+            To ensure your file has the correct format, download and use this [Download Excel](https://github.com/vinay-bhati/RV-Cal/raw/d79adf200471bc124ce52bede8fdc600a251f83c/Sample_GLI_Has_Fvc_Percent_Predicted.xlsx).
             """, unsafe_allow_html=True)
 
                     file = st.file_uploader("Upload Excel File", type=['xlsx'])
