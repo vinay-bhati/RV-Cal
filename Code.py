@@ -491,7 +491,7 @@ elif process_type == 'Batch':
             st.markdown("""
     ### Batch Processing Instructions
     - **File Type:** Excel file (.xlsx)
-    - **Required Columns:** email, age, gender, measured_fev1, measured_fvc, fvc_percent_predicted
+    - **Required Columns:** age, gender, measured_fev1, measured_fvc, fvc_percent_predicted
     - **Data Format:**
       - **age:** 3 - 95
       - **gender:**('Male' or 'Female')
