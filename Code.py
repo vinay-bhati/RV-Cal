@@ -4,7 +4,7 @@ import numpy as np
 import math
 from validate_email import validate_email
 import boto3
-from io import StringIO
+from io import StringIO,BytesIO
 from datetime import date, datetime
 
 # Load AWS configuration from secrets
