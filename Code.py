@@ -126,7 +126,7 @@ def calculate_ecsc_fvc(age, height, fev1, fvc, gender, race):
         return round((0.00536 * age - 0.000265 * (age ** 2) + 0.00013606 * (height ** 2) - 0.3039), 2)
     return "Insufficient data for prediction"
 
-def calculate_ecsc_metrics(age, height, measured_fev1, predicted_fvc, measured_fvc):
+def calculate_ecsc_metrics(age, height, measured_fev1, predicted_fvc, measured_fvc,gender,race):
     """Calculate additional respiratory metrics based on user input and predicted FVC."""
     if measured_fvc and predicted_fvc:
         fvc_percent_predicted = round((measured_fvc / predicted_fvc) * 100, 1)
@@ -342,7 +342,7 @@ def process_ecsc_batch(file):
                pd.isna(row['measured_fvc']) or pd.isna(row['race']):
                 raise ValueError("Missing data in one or more required fields.")
 
-            email = row.get('email', 'no-email-provided')
+            email3 = email
             age = int(row['age'])
             gender = row['gender'].strip().title()  # Normalize gender to handle case variations
             height = float(row['height'])
@@ -357,14 +357,17 @@ def process_ecsc_batch(file):
                 raise ValueError(f"Invalid race value: {race}")
 
             # Map gender and race to numeric values for calculations
-            gender_numeric = 1 if gender == 'Male' else 0
-            race_numeric = 1 if race == 'White' else 2
+            gender = 1 if gender == 'Male' else 0
+            race = 1 if race == 'White' else 2
 
-            pred_fvc = calculate_ecsc_fvc(age, height, measured_fev1, measured_fvc, gender_numeric, race_numeric)
-            fvc_percent_predicted, fev1_fvc_ratio, rv_percent_est, rv150, rv175, rv200 = calculate_ecsc_metrics(age, height, measured_fev1, pred_fvc, measured_fvc)
+            pred_fvc = calculate_ecsc_fvc(age, height, measured_fev1, measured_fvc, gender, race)
+            fvc_percent_predicted, fev1_fvc_ratio, rv_percent_est, rv150, rv175, rv200 = calculate_ecsc_metrics(age, height, measured_fev1, pred_fvc, measured_fvc,gender,race)
+
+            gender = 'Male' if gender == 1 else "Female"
+            race = 'White' if race == 1 else "Black"
 
             results.append({
-                "email": email,
+                "email": email3,
                 "age": age,
                 "gender": gender,
                 "height": height,
@@ -388,8 +391,7 @@ def process_ecsc_batch(file):
         st.error(f"Failed to process: {error_count} records")
 
     return results_df
-
-
+    
 st.title('RV Estimate Calculator')
 email = st.text_input("Enter email ID:")
 process_type = st.radio("Choose the type of process:", ('Single', 'Batch'),horizontal=True,index=None)
@@ -708,7 +710,7 @@ elif process_type == 'Batch':
                 To help you prepare your data correctly, download and use this [Download Excel](https://github.com/vinay-bhati/RV-Cal/raw/refs/heads/main/Sample_GLI.xlsx) template.
                 """, unsafe_allow_html=True)
                 file = st.file_uploader("Upload Excel File", type=['xlsx'])
-                if file and st.button('Process Batch File for ECSC'):
+                if file and st.button('Process Batch File'):
                     processed_data = process_ecsc_batch(file)
                     if processed_data is not None and not processed_data.empty:
                         processed_data_csv = processed_data.to_csv(index=False).encode('utf-8')
