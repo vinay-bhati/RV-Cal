@@ -645,7 +645,7 @@ elif process_type == 'Batch':
                     st.markdown("""
                     ### Batch Processing Instructions
                     - **File Type:** Excel file (.xlsx)
-                    - **Required Columns:** email, age, gender, height, measured_fev1, measured_fvc
+                    - **Required Columns:** age, gender, height, measured_fev1, measured_fvc
                     - **Data Format:**
                       - **age:** Integer (3 - 95)
                       - **gender:** Text ('Male' or 'Female')
@@ -676,7 +676,7 @@ elif process_type == 'Batch':
                 st.markdown("""
                 ### Batch Processing Instructions
                 - **File Type:** Excel file (.xlsx)
-                - **Required Columns:** email, age, gender, height, measured_fev1, measured_fvc, race
+                - **Required Columns:** age, gender, height, measured_fev1, measured_fvc, race
                 - **Data Format:**
                   - **age:** Integer (3 - 95)
                   - **gender:** Text ('Male' or 'Female')
