@@ -195,225 +195,229 @@ h1 {
 """, unsafe_allow_html=True)
 
 st.title('RV Estimate Calculator')
+process_type = st.radio("Choose the type of process:", ('Single', 'Batch'),horizontal=True,index=None)
 
-email = st.text_input("Enter email ID:")
-
-if email:
-    is_email_valid = validate_email(email)
-    if not is_email_valid:
-        st.error("Invalid email address. Please enter a valid email.")
-    else:
-        # Place this where you define your interface components
-        #rv_threshold = st.slider("Select RV % Est Threshold for Patient Care:", 100, 200, 150)
-        standard = st.radio("Select Standard:", ('GLI', 'ECSC'),horizontal=True,index=None)
-
-        if standard == 'GLI':
-            has_fvc_pred = st.radio("Do You Have FVC % Predicted?", ('Yes', 'No'),horizontal=True,index=None)
-            if has_fvc_pred == 'Yes':
-                gender = st.radio("Select Gender:", ('Male', 'Female'), horizontal=True,index=None)
-        
-                if gender:
-                    # Create layout with columns for age, measured FEV1, measured FVC, and FVC % Predicted
-                    col1, col2, col3, col4 = st.columns(4)
-                    with col1:
-                        age = st.number_input("Enter Age (Years):", min_value=3, max_value=95, step=1, key='age_yes')
-                    with col2:
-                        measured_fev1 = st.number_input("Enter Measured FEV1 (XX.XX):",min_value=0.0,format="%.2f", step=0.01, key='fev1_yes')
-                    with col3:
-                        measured_fvc = st.number_input("Enter Measured FVC (XX.XX):", min_value=0.0, format="%.2f", step=0.01, key='fvc_yes')
-                    with col4:
-                        fvc_percent_predicted = st.number_input("Enter FVC % Predicted:", min_value=0.0,format="%.1f", step=0.1, key='fvc_percent_pred')
-                        
-                    # Store the button press result in a variable
-                    evaluate_pressed = st.button('Evaluate')
-                    
-                    if evaluate_pressed and age and measured_fev1 and measured_fvc and fvc_percent_predicted:
-                        measured_fev1_fvc = measured_fev1 / measured_fvc if measured_fvc != 0 else 0
-                        measured_fev1_fvc =  math.ceil(measured_fev1_fvc * 1000) / 1000
-                        
-                        # # Display measured values and provided FVC % Predicted
-                        # col5, col6, col7, col8= st.columns(4)
-                        # with col5:
-                        #     st.metric(label="Measured FEV1", value=f"{measured_fev1:.2f} L")
-                        # with col6:
-                        #     st.metric(label="Measured FVC", value=f"{measured_fvc:.2f} L")
-                        # with col7:
-                        #     st.metric(label="FVC % Predicted", value=f"{fvc_percent_predicted:.1f}%")
-                        # with col8:
-                        #     # Calculate FEV1/FVC ratio from measured values and display
-                        #     measured_fev1_fvc = measured_fev1 / measured_fvc if measured_fvc != 0 else 0
-                        #     measured_fev1_fvc =  math.ceil(measured_fev1_fvc * 1000) / 1000
-                        #     st.metric(label="Measured FEV1/FVC", value=f"{measured_fev1_fvc:.3f}")
-                        
-                        col9, col10, col11,col12 = st.columns(4)
-                        rv_percent_est = calculate_rv_est(fvc_percent_predicted, measured_fev1_fvc, age, gender)
-                        # Calculate RV % Predicted Prevalence
-                        RV150, RV175, RV200 = calculate_rv_predicted(rv_percent_est)
-                        # Adding a row to display RV % est
-                        col9, col10, col11, col12 = st.columns(4)
-                        # with col9:
-                        #     st.metric(label="RV % Estimate", value=f"{rv_percent_est:.1f}")
-                        with col10:
-                            st.metric(label="RV >150% Probability", value=f"{RV150:.1f}%")
-                        with col11:
-                            st.metric(label="RV >175% Probability", value=f"{RV175:.1f}%")
-                        with col12:
-                            st.metric(label="RV >200% Probability", value=f"{RV200:.1f}%")
+if process_type == 'Single':
+    email = st.text_input("Enter email ID:")
     
-                        # st.write("Final Result")
-                        # # Final Result based on the RV% Est threshold
-                        # if rv_percent_est >= rv_threshold:
-                        #     st.success(f"Patient Can be Sent to Next Step 🟢")
-                        # else:
-                        #     st.error(f"Patient is Fit, No Further Care Required 🔴")
-                        # Append the data to the CSV file in S3
-                        append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, None, measured_fev1, measured_fvc, fvc_percent_predicted, None, None, None, rv_percent_est, RV150, RV175, RV200,None)
-                    elif evaluate_pressed:
-                        st.error("Please fill in all required fields before evaluating.")
-                        
-            elif has_fvc_pred == 'No':
-                gender = st.radio("Select Gender:", ('Male', 'Female'),horizontal=True,index=None)
-
-                if gender:
-                    # Create a layout with columns for age, height, FEV1, and FVC on one line
-                    col1, col2, col3, col4 = st.columns(4)
+    if email:
+        is_email_valid = validate_email(email)
+        if not is_email_valid:
+            st.error("Invalid email address. Please enter a valid email.")
+        else:
+            # Place this where you define your interface components
+            #rv_threshold = st.slider("Select RV % Est Threshold for Patient Care:", 100, 200, 150)
+            standard = st.radio("Select Standard:", ('GLI', 'ECSC'),horizontal=True,index=None)
     
-                    with col1:
-                        age = st.number_input("Enter Age (Years):", min_value=3, max_value=95, step=1, key='age')
-                    with col2:
-                        height = st.number_input("Enter Height (in cm):", min_value=150.0, max_value=250.0, step=0.1, key='height',format="%.1f")
-                    with col3:
-                        measured_fev1 = st.number_input("Enter Measured FEV1 (XX.XX):", min_value=0.0, format="%.2f", step=0.01, key='fev1')
-                    with col4:
-                        measured_fvc = st.number_input("Enter Measured FVC (XX.XX):", min_value=0.0, format="%.2f", step=0.01, key='fvc')
-
-                     # Store the button press result in a variable
-                    calculate_pressed = st.button('Calculate')
-                    
-                    # Calculate button can be placed below the inputs or in a new line
-                    if calculate_pressed and age and height and measured_fev1:
-                        fev1, fvc, fev1_fvc = calculate_values(age, height, gender)
-                        percent_predicted_fev1 = (measured_fev1 / fev1) * 100
-                        percent_predicted_fvc = round(measured_fvc / fvc * 100,1) if fvc != 0 else 0
-                        # Calculate FEV1/FVC ratio from measured values and display
-                        measured_fev1_fvc = measured_fev1 / measured_fvc if measured_fvc != 0 else 0
-                        measured_fev1_fvc =  math.ceil(measured_fev1_fvc * 1000) / 1000
-    
-                        # col1, col2, col3, col4 = st.columns(4)  # Create four columns
-                        
-                        # with col1:
-                        #     st.metric(label="Predicted FEV1", value=f"{fev1:.2f} L")
-                        # with col2:
-                        #     st.metric(label="Predicted FVC", value=f"{fvc:.2f} L")
-                        # with col3:
-                        #     st.metric(label="Predicted FEV1/FVC", value=f"{fev1_fvc:.2f}")
-                        # with col4:
-                        #     st.metric(label="% Predicted FVC", value=f"{percent_predicted_fvc:.1f}")
-    
-                        col5, col6, col7, col8 = st.columns(4)
-                        
-                        # with col5:
-                        #     st.metric(label="Measured FEV1", value=f"{measured_fev1:.2f} L")
-                        # with col6:
-                        #     st.metric(label="Measured FVC", value=f"{measured_fvc:.2f} L")
-                        # with col7:
-                            # # Calculate FEV1/FVC ratio from measured values and display
-                            # measured_fev1_fvc = measured_fev1 / measured_fvc if measured_fvc != 0 else 0
-                            # measured_fev1_fvc =  math.ceil(measured_fev1_fvc * 1000) / 1000
-                            # st.metric(label="Measured FEV1/FVC", value=f"{measured_fev1_fvc:.3f}")
-                        rv_percent_est = calculate_rv_est(percent_predicted_fvc, measured_fev1_fvc, age, gender)
-                        # Calculate RV % Predicted Prevalence
-                        RV150, RV175, RV200 = calculate_rv_predicted(rv_percent_est)
-                        # Adding a row to display RV % est
-                        col9, col10, col11, col12 = st.columns(4)
-                        # with col9:
-                        #     st.metric(label="RV % Estimate", value=f"{rv_percent_est:.1f}")
-                        with col10:
-                            st.metric(label="RV >150% Probability", value=f"{RV150:.1f}%")
-                        with col11:
-                            st.metric(label="RV >175% Probability", value=f"{RV175:.1f}%")
-                        with col12:
-                            st.metric(label="RV >200% Probability", value=f"{RV200:.1f}%")
-    
-                        # st.write("Final Result")
-                        # # Final Result based on the RV% Est threshold
-                        # if rv_percent_est >= rv_threshold:
-                        #     st.success(f"Patient Can be Sent to Next Step 🟢")
-                        # else:
-                        #     st.error(f"Patient is Fit, No Further Care Required 🔴")
-                        # Append the data to the CSV file in S3
-                        append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, height, measured_fev1, measured_fvc, percent_predicted_fvc, fev1, fvc, fev1_fvc, rv_percent_est, RV150, RV175, RV200,None)
-
-                    elif calculate_pressed:
-                        st.error("Please fill in all required fields before calculating.")
-                        
-        elif standard == 'ECSC':
-            gender = st.radio("Select Sex:", (1, 0), format_func=lambda x: 'Male' if x == 1 else 'Female',index=None,horizontal=True)
+            if standard == 'GLI':
+                has_fvc_pred = st.radio("Do You Have FVC % Predicted?", ('Yes', 'No'),horizontal=True,index=None)
+                if has_fvc_pred == 'Yes':
+                    gender = st.radio("Select Gender:", ('Male', 'Female'), horizontal=True,index=None)
             
-            if gender is not None:  # Ensures that race is only shown if gender is selected
-                race = st.radio("Select Race:", (1, 2), format_func=lambda x: 'White' if x == 1 else 'Black',index=None,horizontal=True)
+                    if gender:
+                        # Create layout with columns for age, measured FEV1, measured FVC, and FVC % Predicted
+                        col1, col2, col3, col4 = st.columns(4)
+                        with col1:
+                            age = st.number_input("Enter Age (Years):", min_value=3, max_value=95, step=1, key='age_yes')
+                        with col2:
+                            measured_fev1 = st.number_input("Enter Measured FEV1 (XX.XX):",min_value=0.0,format="%.2f", step=0.01, key='fev1_yes')
+                        with col3:
+                            measured_fvc = st.number_input("Enter Measured FVC (XX.XX):", min_value=0.0, format="%.2f", step=0.01, key='fvc_yes')
+                        with col4:
+                            fvc_percent_predicted = st.number_input("Enter FVC % Predicted:", min_value=0.0,format="%.1f", step=0.1, key='fvc_percent_pred')
+                            
+                        # Store the button press result in a variable
+                        evaluate_pressed = st.button('Evaluate')
+                        
+                        if evaluate_pressed and age and measured_fev1 and measured_fvc and fvc_percent_predicted:
+                            measured_fev1_fvc = measured_fev1 / measured_fvc if measured_fvc != 0 else 0
+                            measured_fev1_fvc =  math.ceil(measured_fev1_fvc * 1000) / 1000
+                            
+                            # # Display measured values and provided FVC % Predicted
+                            # col5, col6, col7, col8= st.columns(4)
+                            # with col5:
+                            #     st.metric(label="Measured FEV1", value=f"{measured_fev1:.2f} L")
+                            # with col6:
+                            #     st.metric(label="Measured FVC", value=f"{measured_fvc:.2f} L")
+                            # with col7:
+                            #     st.metric(label="FVC % Predicted", value=f"{fvc_percent_predicted:.1f}%")
+                            # with col8:
+                            #     # Calculate FEV1/FVC ratio from measured values and display
+                            #     measured_fev1_fvc = measured_fev1 / measured_fvc if measured_fvc != 0 else 0
+                            #     measured_fev1_fvc =  math.ceil(measured_fev1_fvc * 1000) / 1000
+                            #     st.metric(label="Measured FEV1/FVC", value=f"{measured_fev1_fvc:.3f}")
+                            
+                            col9, col10, col11,col12 = st.columns(4)
+                            rv_percent_est = calculate_rv_est(fvc_percent_predicted, measured_fev1_fvc, age, gender)
+                            # Calculate RV % Predicted Prevalence
+                            RV150, RV175, RV200 = calculate_rv_predicted(rv_percent_est)
+                            # Adding a row to display RV % est
+                            col9, col10, col11, col12 = st.columns(4)
+                            # with col9:
+                            #     st.metric(label="RV % Estimate", value=f"{rv_percent_est:.1f}")
+                            with col10:
+                                st.metric(label="RV >150% Probability", value=f"{RV150:.1f}%")
+                            with col11:
+                                st.metric(label="RV >175% Probability", value=f"{RV175:.1f}%")
+                            with col12:
+                                st.metric(label="RV >200% Probability", value=f"{RV200:.1f}%")
+        
+                            # st.write("Final Result")
+                            # # Final Result based on the RV% Est threshold
+                            # if rv_percent_est >= rv_threshold:
+                            #     st.success(f"Patient Can be Sent to Next Step 🟢")
+                            # else:
+                            #     st.error(f"Patient is Fit, No Further Care Required 🔴")
+                            # Append the data to the CSV file in S3
+                            append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, None, measured_fev1, measured_fvc, fvc_percent_predicted, None, None, None, rv_percent_est, RV150, RV175, RV200,None)
+                        elif evaluate_pressed:
+                            st.error("Please fill in all required fields before evaluating.")
+                            
+                elif has_fvc_pred == 'No':
+                    gender = st.radio("Select Gender:", ('Male', 'Female'),horizontal=True,index=None)
+    
+                    if gender:
+                        # Create a layout with columns for age, height, FEV1, and FVC on one line
+                        col1, col2, col3, col4 = st.columns(4)
+        
+                        with col1:
+                            age = st.number_input("Enter Age (Years):", min_value=3, max_value=95, step=1, key='age')
+                        with col2:
+                            height = st.number_input("Enter Height (in cm):", min_value=150.0, max_value=250.0, step=0.1, key='height',format="%.1f")
+                        with col3:
+                            measured_fev1 = st.number_input("Enter Measured FEV1 (XX.XX):", min_value=0.0, format="%.2f", step=0.01, key='fev1')
+                        with col4:
+                            measured_fvc = st.number_input("Enter Measured FVC (XX.XX):", min_value=0.0, format="%.2f", step=0.01, key='fvc')
+    
+                         # Store the button press result in a variable
+                        calculate_pressed = st.button('Calculate')
+                        
+                        # Calculate button can be placed below the inputs or in a new line
+                        if calculate_pressed and age and height and measured_fev1:
+                            fev1, fvc, fev1_fvc = calculate_values(age, height, gender)
+                            percent_predicted_fev1 = (measured_fev1 / fev1) * 100
+                            percent_predicted_fvc = round(measured_fvc / fvc * 100,1) if fvc != 0 else 0
+                            # Calculate FEV1/FVC ratio from measured values and display
+                            measured_fev1_fvc = measured_fev1 / measured_fvc if measured_fvc != 0 else 0
+                            measured_fev1_fvc =  math.ceil(measured_fev1_fvc * 1000) / 1000
+        
+                            # col1, col2, col3, col4 = st.columns(4)  # Create four columns
+                            
+                            # with col1:
+                            #     st.metric(label="Predicted FEV1", value=f"{fev1:.2f} L")
+                            # with col2:
+                            #     st.metric(label="Predicted FVC", value=f"{fvc:.2f} L")
+                            # with col3:
+                            #     st.metric(label="Predicted FEV1/FVC", value=f"{fev1_fvc:.2f}")
+                            # with col4:
+                            #     st.metric(label="% Predicted FVC", value=f"{percent_predicted_fvc:.1f}")
+        
+                            col5, col6, col7, col8 = st.columns(4)
+                            
+                            # with col5:
+                            #     st.metric(label="Measured FEV1", value=f"{measured_fev1:.2f} L")
+                            # with col6:
+                            #     st.metric(label="Measured FVC", value=f"{measured_fvc:.2f} L")
+                            # with col7:
+                                # # Calculate FEV1/FVC ratio from measured values and display
+                                # measured_fev1_fvc = measured_fev1 / measured_fvc if measured_fvc != 0 else 0
+                                # measured_fev1_fvc =  math.ceil(measured_fev1_fvc * 1000) / 1000
+                                # st.metric(label="Measured FEV1/FVC", value=f"{measured_fev1_fvc:.3f}")
+                            rv_percent_est = calculate_rv_est(percent_predicted_fvc, measured_fev1_fvc, age, gender)
+                            # Calculate RV % Predicted Prevalence
+                            RV150, RV175, RV200 = calculate_rv_predicted(rv_percent_est)
+                            # Adding a row to display RV % est
+                            col9, col10, col11, col12 = st.columns(4)
+                            # with col9:
+                            #     st.metric(label="RV % Estimate", value=f"{rv_percent_est:.1f}")
+                            with col10:
+                                st.metric(label="RV >150% Probability", value=f"{RV150:.1f}%")
+                            with col11:
+                                st.metric(label="RV >175% Probability", value=f"{RV175:.1f}%")
+                            with col12:
+                                st.metric(label="RV >200% Probability", value=f"{RV200:.1f}%")
+        
+                            # st.write("Final Result")
+                            # # Final Result based on the RV% Est threshold
+                            # if rv_percent_est >= rv_threshold:
+                            #     st.success(f"Patient Can be Sent to Next Step 🟢")
+                            # else:
+                            #     st.error(f"Patient is Fit, No Further Care Required 🔴")
+                            # Append the data to the CSV file in S3
+                            append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, height, measured_fev1, measured_fvc, percent_predicted_fvc, fev1, fvc, fev1_fvc, rv_percent_est, RV150, RV175, RV200,None)
+    
+                        elif calculate_pressed:
+                            st.error("Please fill in all required fields before calculating.")
+                            
+            elif standard == 'ECSC':
+                gender = st.radio("Select Sex:", (1, 0), format_func=lambda x: 'Male' if x == 1 else 'Female',index=None,horizontal=True)
                 
-                if race is not None:  # Ensures that the remaining inputs are only shown if race is selected
-                    col1, col2, col3, col4 = st.columns(4)
-                    with col1:
-                        age = st.number_input("Age:", min_value=3, max_value=95, step=1)
-                    with col2:
-                        height = st.number_input("Height (in cm):", min_value=100.0, max_value=250.0, step=0.1, format="%.1f")
-                    with col3:
-                        measured_fev1 = st.number_input("Enter Measured FEV1 (XX.XX):", min_value=0.0, format="%.2f", step=0.01)
-                    with col4:
-                        measured_fvc = st.number_input("Enter Measured FVC (XX.XX):", min_value=0.0, format="%.2f", step=0.01)
-
-                    #Store the button press result in a variable
-                    calculate_ECSC = st.button('Calculate ECSC')
-
-                    if calculate_ECSC and age and height and measured_fev1 and measured_fvc:
-                        pred_fvc = calculate_ecsc_fvc(age, height, measured_fev1, measured_fvc, gender, race)
-                        fvc_percent_predicted_ecsc, fev1_fvc_ratio, rv_percent_est, rv150, rv175, rv200 = calculate_ecsc_metrics(age, height, measured_fev1, pred_fvc, measured_fvc)
-
-                        col8, col9, col10, col11 = st.columns(4)
-                        # Display the calculated values
-                        # with col5:
-                        #     st.metric(label="Predicted FVC:", value=f"{pred_fvc}")
-                        #     #st.write(f"Predicted FVC: {pred_fvc} L")
-                        # with col6:
-                        #     st.metric(label="FVC % Predicted:", value=f"{fvc_percent_predicted_ecsc}")
-                        #     #st.write(f"FVC % Predicted: {fvc_percent_predicted_ecsc}%")
-                        # with col7:
-                        #     st.metric(label="FEV1/FVC Ratio:", value=f"{fev1_fvc_ratio}")
-                        #     #st.write(f"FEV1/FVC Ratio: {fev1_fvc_ratio}%")
-                        # with col8:    
-                        #     st.metric(label="RV % Estimated:", value=f"{rv_percent_est}")
-                        #     #st.write(f"RV % Estimated: {rv_percent_est}")
-                        with col9:
-                            #st.metric(label="RV >150% Probability", value=f"{rv150}%")
-                            #st.write(f"RV >150% Probability: {rv150}%")
-                            st.metric(label="RV >150% Probability", value=f"{rv150:.1f}%")
-                        with col10:
-                            #st.metric(label="RV >175% Probability", value=f"{rv175}%")
-                            #st.write(f"RV >175% Probability: {rv175}%")
-                            st.metric(label="RV >175% Probability", value=f"{rv175:.1f}%")
-                        with col11:
-                            #st.metric(label="RV >200% Probability", value=f"{rv200}%")
-                            #st.write(f"RV >200% Probability: {rv200}%")
-                            st.metric(label="RV >200% Probability", value=f"{rv200:.1f}%")
+                if gender is not None:  # Ensures that race is only shown if gender is selected
+                    race = st.radio("Select Race:", (1, 2), format_func=lambda x: 'White' if x == 1 else 'Black',index=None,horizontal=True)
                     
-                        # st.write("Final Result")
-                        # # Final Result based on the RV% Est threshold
-                        # if rv_percent_est >= rv_threshold:
-                        #     st.success(f"Patient Can be Sent to Next Step 🟢")
-                        # else:
-                        #     st.error(f"Patient is Fit, No Further Care Required 🔴")
-
-                        # Map numeric gender and race to descriptive text
-                        gender_text = 'Male' if gender == 1 else 'Female'
-                        race_text = 'White' if race == 1 else 'Black'
-
-                        # Append the data to the CSV file in S3
-                        append_to_s3(email, rv_threshold, standard, None, gender_text, age, height, measured_fev1, measured_fvc, fvc_percent_predicted_ecsc, None, None, None, rv_percent_est, rv150, rv175, rv200, race_text)
-
-
-                    elif calculate_ECSC:
-                        st.error("Please fill in all required fields before calculating.")
-else:
-    st.write("Please enter an email address to continue.")
+                    if race is not None:  # Ensures that the remaining inputs are only shown if race is selected
+                        col1, col2, col3, col4 = st.columns(4)
+                        with col1:
+                            age = st.number_input("Age:", min_value=3, max_value=95, step=1)
+                        with col2:
+                            height = st.number_input("Height (in cm):", min_value=100.0, max_value=250.0, step=0.1, format="%.1f")
+                        with col3:
+                            measured_fev1 = st.number_input("Enter Measured FEV1 (XX.XX):", min_value=0.0, format="%.2f", step=0.01)
+                        with col4:
+                            measured_fvc = st.number_input("Enter Measured FVC (XX.XX):", min_value=0.0, format="%.2f", step=0.01)
+    
+                        #Store the button press result in a variable
+                        calculate_ECSC = st.button('Calculate ECSC')
+    
+                        if calculate_ECSC and age and height and measured_fev1 and measured_fvc:
+                            pred_fvc = calculate_ecsc_fvc(age, height, measured_fev1, measured_fvc, gender, race)
+                            fvc_percent_predicted_ecsc, fev1_fvc_ratio, rv_percent_est, rv150, rv175, rv200 = calculate_ecsc_metrics(age, height, measured_fev1, pred_fvc, measured_fvc)
+    
+                            col8, col9, col10, col11 = st.columns(4)
+                            # Display the calculated values
+                            # with col5:
+                            #     st.metric(label="Predicted FVC:", value=f"{pred_fvc}")
+                            #     #st.write(f"Predicted FVC: {pred_fvc} L")
+                            # with col6:
+                            #     st.metric(label="FVC % Predicted:", value=f"{fvc_percent_predicted_ecsc}")
+                            #     #st.write(f"FVC % Predicted: {fvc_percent_predicted_ecsc}%")
+                            # with col7:
+                            #     st.metric(label="FEV1/FVC Ratio:", value=f"{fev1_fvc_ratio}")
+                            #     #st.write(f"FEV1/FVC Ratio: {fev1_fvc_ratio}%")
+                            # with col8:    
+                            #     st.metric(label="RV % Estimated:", value=f"{rv_percent_est}")
+                            #     #st.write(f"RV % Estimated: {rv_percent_est}")
+                            with col9:
+                                #st.metric(label="RV >150% Probability", value=f"{rv150}%")
+                                #st.write(f"RV >150% Probability: {rv150}%")
+                                st.metric(label="RV >150% Probability", value=f"{rv150:.1f}%")
+                            with col10:
+                                #st.metric(label="RV >175% Probability", value=f"{rv175}%")
+                                #st.write(f"RV >175% Probability: {rv175}%")
+                                st.metric(label="RV >175% Probability", value=f"{rv175:.1f}%")
+                            with col11:
+                                #st.metric(label="RV >200% Probability", value=f"{rv200}%")
+                                #st.write(f"RV >200% Probability: {rv200}%")
+                                st.metric(label="RV >200% Probability", value=f"{rv200:.1f}%")
+                        
+                            # st.write("Final Result")
+                            # # Final Result based on the RV% Est threshold
+                            # if rv_percent_est >= rv_threshold:
+                            #     st.success(f"Patient Can be Sent to Next Step 🟢")
+                            # else:
+                            #     st.error(f"Patient is Fit, No Further Care Required 🔴")
+    
+                            # Map numeric gender and race to descriptive text
+                            gender_text = 'Male' if gender == 1 else 'Female'
+                            race_text = 'White' if race == 1 else 'Black'
+    
+                            # Append the data to the CSV file in S3
+                            append_to_s3(email, rv_threshold, standard, None, gender_text, age, height, measured_fev1, measured_fvc, fvc_percent_predicted_ecsc, None, None, None, rv_percent_est, rv150, rv175, rv200, race_text)
+    
+    
+                        elif calculate_ECSC:
+                            st.error("Please fill in all required fields before calculating.")
+    else:
+        st.write("Please enter an email address to continue.")
+elif process_type == 'Batch':
+    continue
