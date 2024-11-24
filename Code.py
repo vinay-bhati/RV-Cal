@@ -589,7 +589,6 @@ elif process_type == 'Batch':
                     - **File Type:** Excel file (.xlsx)
                     - **Required Columns:** email, age, gender, height, measured_fev1, measured_fvc
                     - **Data Format:**
-                      - **email:** Must be a valid email format
                       - **age:** Integer (3 - 95)
                       - **gender:** Text ('Male' or 'Female')
                       - **height:** Float (format x.x or x.xx, e.g., 175.5)
