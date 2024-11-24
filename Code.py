@@ -495,9 +495,9 @@ elif process_type == 'Batch':
     - **Data Format:**
       - **age:** 3 - 95
       - **gender:**('Male' or 'Female')
-      - **measured_fev1:** XX.XX
-      - **measured_fvc:** XX.XX
-      - **fvc_percent_predicted:** XX.XX
+      - **measured_fev1:** Format(XX.XX) Max 2 Decimal Places
+      - **measured_fvc:** Format(XX.XX) Max 2 Decimal Places
+      - **fvc_percent_predicted:** Format(XX.X) 1 Decimal Place
       
     Please ensure that your file adheres to the above format to avoid processing errors.
     """)
