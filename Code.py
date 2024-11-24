@@ -493,12 +493,11 @@ elif process_type == 'Batch':
     - **File Type:** Excel file (.xlsx)
     - **Required Columns:** email, age, gender, measured_fev1, measured_fvc, fvc_percent_predicted
     - **Data Format:**
-      - **email:** Text
-      - **age:** Integer
-      - **gender:** Text ('Male' or 'Female')
-      - **measured_fev1:** Float (format x.xx)
-      - **measured_fvc:** Float (format x.xx)
-      - **fvc_percent_predicted:** Float (format x.x)
+      - **age:** 3 - 95
+      - **gender:**('Male' or 'Female')
+      - **measured_fev1:** XX.XX
+      - **measured_fvc:** XX.XX
+      - **fvc_percent_predicted:** XX.XX 
     Please ensure that your file adheres to the above format to avoid processing errors.
     """)
             file = st.file_uploader("Upload Excel File", type=['xlsx'])
