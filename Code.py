@@ -506,6 +506,11 @@ elif process_type == 'Batch':
               
             Please ensure that your file adheres to the above format to avoid processing errors.
             """)
+                    st.markdown("""
+            ### Download Sample Excel Template
+            To ensure your file has the correct format, download and use this [Download Excel](https://github.com/yourusername/yourrepository/raw/main/path/to/yourfile.xlsx).
+            """, unsafe_allow_html=True)
+
                     file = st.file_uploader("Upload Excel File", type=['xlsx'])
                     if file and st.button('Process Batch File'):
                         processed_data = process_gli_batch_excel(file)
