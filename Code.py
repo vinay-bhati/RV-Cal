@@ -257,6 +257,88 @@ def process_gli_batch_excel(file):
     
     return results_df
 
+def process_gli_batch_no_fvc_pred(file):
+    try:
+        df = pd.read_excel(file, engine='openpyxl')
+        results = []
+        success_count = 0
+        error_count = 0
+        
+        for index, row in df.iterrows():
+            try:
+                # Ensure all required data is present
+                if pd.isna(row['email']) or pd.isna(row['age']) or pd.isna(row['gender']) or \
+                   pd.isna(row['height']) or pd.isna(row['measured_fev1']) or pd.isna(row['measured_fvc']):
+                    raise ValueError("Missing data in one or more required fields at row {}".format(index + 1))
+
+                email2 = email
+                age = int(row['age'])
+                gender = row['gender']
+                height = float(row['height'])
+                measured_fev1 = float(row['measured_fev1'])
+                measured_fvc = float(row['measured_fvc'])
+
+                # Perform the calculations as done in the single entry scenario
+                fev1, fvc, fev1_fvc = calculate_values(age, height, gender)
+                percent_predicted_fev1 = (measured_fev1 / fev1) * 100
+                percent_predicted_fvc = (measured_fvc / fvc) * 100
+                measured_fev1_fvc = measured_fev1 / measured_fvc if measured_fvc != 0 else 0
+                measured_fev1_fvc = round(measured_fev1_fvc, 3)
+                
+                rv_percent_est = calculate_rv_est(percent_predicted_fvc, measured_fev1_fvc, age, gender)
+                rv150, rv175, rv200 = calculate_rv_predicted(rv_percent_est)
+
+                results.append({
+                    "email": email2,
+                    "age": age,
+                    "gender": gender,
+                    "height": height,
+                    "measured_fev1": measured_fev1,
+                    "measured_fvc": measured_fvc,
+                    "fev1_fvc_ratio": measured_fev1_fvc,
+                    "rv150": rv150,
+                    "rv175": rv175,
+                    "rv200": rv200
+                })
+                success_count += 1
+
+            except Exception as e:
+                error_count += 1
+                st.error(f"Error processing record {index + 1}: {e}")
+
+        results_df = pd.DataFrame(results)
+        st.success(f"Successfully processed: {success_count} records")
+        if error_count > 0:
+            st.error(f"Failed to process: {error_count} records")
+
+        return results_df
+
+    except Exception as e:
+        st.error(f"Failed to read the Excel file: {e}")
+        return None
+
+# Adding the batch processing to your Streamlit page
+elif has_fvc_pred == 'No':
+    st.markdown("""
+        ### Upload your batch file for GLI without FVC % Predicted
+        - Make sure your file includes columns for email, age, gender, height, measured_fev1, and measured_fvc.
+        - File should be in .xlsx format.
+    """)
+    file = st.file_uploader("Upload Excel File", type=['xlsx'])
+    if file and st.button('Process Batch File'):
+        processed_data = process_gli_batch_no_fvc_pred(file)
+        if processed_data is not None and not processed_data.empty:
+            output = BytesIO()
+            with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+                processed_data.to_excel(writer, index=False, sheet_name='Processed Data')
+            output.seek(0)
+            st.download_button(
+                label="Download Processed Data as Excel",
+                data=output,
+                file_name='processed_data.xlsx',
+                mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            )
+
 
 st.title('RV Estimate Calculator')
 email = st.text_input("Enter email ID:")
@@ -498,11 +580,11 @@ elif process_type == 'Batch':
             - **File Type:** Excel file (.xlsx)
             - **Required Columns:** age, gender, measured_fev1, measured_fvc, fvc_percent_predicted
             - **Data Format:**
-              - **age:** 3 - 95
-              - **gender:**('Male' or 'Female')
-              - **measured_fev1:** Format(XX.XX) Max 2 Decimal Places
-              - **measured_fvc:** Format(XX.XX) Max 2 Decimal Places
-              - **fvc_percent_predicted:** Format(XX.X) Max 1 Decimal Place
+              - **age:** Integer (3 - 95)
+              - **gender:** Text ('Male' or 'Female')
+              - **measured_fev1:** Float (format x.xx, e.g., 2.34)
+              - **measured_fvc:** Float (format x.xx, e.g., 3.45)
+              - **fvc_percent_predicted:** Float (format x.x, e.g., 12.4)
               
             Please ensure that your file adheres to the above format to avoid processing errors.
             """)
@@ -523,7 +605,37 @@ elif process_type == 'Batch':
                                 file_name='processed_data.csv',
                                 mime='text/csv',
                             )
-                else:
-                    pass
+                elif has_fvc_pred == 'No':
+                    st.markdown("""
+                    ### Batch Processing Instructions
+                    - **File Type:** Excel file (.xlsx)
+                    - **Required Columns:** email, age, gender, height, measured_fev1, measured_fvc
+                    - **Data Format:**
+                      - **email:** Must be a valid email format
+                      - **age:** Integer (3 - 95)
+                      - **gender:** Text ('Male' or 'Female')
+                      - **height:** Float (format x.x or x.xx, e.g., 175.5)
+                      - **measured_fev1:** Float (format x.xx, e.g., 2.34)
+                      - **measured_fvc:** Float (format x.xx, e.g., 3.45)
+                    
+                    Please ensure that your file adheres to the above format to avoid processing errors.
+                    """)
+                    st.markdown("""
+                    #### Download Sample Excel Template
+                    
+                    To help you prepare your data correctly, download and use this [Download Excel](https://github.com/vinay-bhati/RV-Cal/raw/d79adf200471bc124ce52bede8fdc600a251f83c/Sample_GLI_Has_Fvc_Percent_Predicted.xlsx) template.
+                    """, unsafe_allow_html=True)
+
+                    file = st.file_uploader("Upload Excel File", type=['xlsx'])
+                    if file and st.button('Process Batch File'):
+                        processed_data = process_gli_batch_no_fvc_pred(file)
+                        if processed_data is not None and not processed_data.empty:
+                            processed_data_csv = processed_data.to_csv(index=False).encode('utf-8')
+                            st.download_button(
+                                label="Download Processed Data as CSV",
+                                data=processed_data_csv,
+                                file_name='processed_data.csv',
+                                mime='text/csv'
+                            )
             elif standard == 'ECSC':
                 print('In Progres')
