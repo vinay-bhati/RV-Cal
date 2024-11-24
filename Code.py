@@ -484,6 +484,10 @@ if process_type == 'Single':
     else:
         st.write("Please enter an email address to continue.")
 elif process_type == 'Batch':
+    if email:
+        is_email_valid = validate_email(email)
+        if not is_email_valid:
+            st.error("Invalid email address. Please enter a valid email.")
     standard = st.radio("Select Standard:", ('GLI', 'ECSC'))
     if standard == 'GLI':
         has_fvc_pred = st.radio("Do You Have FVC % Predicted?", ('Yes', 'No'),horizontal=True,index=None)
