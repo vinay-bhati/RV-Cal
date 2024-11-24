@@ -318,10 +318,10 @@ def process_gli_batch_no_fvc_pred(file):
         st.error(f"Failed to read the Excel file: {e}")
         return None
 
-
 def process_ecsc_batch(file):
     try:
         df = pd.read_excel(file, engine='openpyxl')
+        df.columns = [col.strip().lower() for col in df.columns]  # Normalize column names
     except Exception as e:
         st.error(f"Failed to read the Excel file: {e}")
         return None
@@ -332,6 +332,10 @@ def process_ecsc_batch(file):
 
     for index, row in df.iterrows():
         try:
+            # Check for necessary columns
+            if 'race' not in df.columns:
+                raise ValueError("Column 'race' is missing from the Excel file.")
+
             # Validate and normalize input data
             if pd.isna(row['age']) or pd.isna(row['gender']) or \
                pd.isna(row['height']) or pd.isna(row['measured_fev1']) or \
@@ -384,6 +388,7 @@ def process_ecsc_batch(file):
         st.error(f"Failed to process: {error_count} records")
 
     return results_df
+
 
 st.title('RV Estimate Calculator')
 email = st.text_input("Enter email ID:")
