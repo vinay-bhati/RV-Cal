@@ -617,3 +617,7 @@ elif process_type == 'Batch':
                             )
             elif standard == 'ECSC':
                 print('In Progres')
+else:
+        st.write("Please enter an email address to continue.")
+
+
