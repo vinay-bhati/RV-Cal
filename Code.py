@@ -629,6 +629,12 @@ elif process_type == 'Batch':
                 has_fvc_pred = st.radio("Do You Have FVC % Predicted?", ('Yes', 'No'),horizontal=True,index=None)
                 if has_fvc_pred == 'Yes':
                     st.markdown("""
+            #### Download Sample Excel Template
+            
+            To ensure your file has the correct format, download and use this [Download Excel](https://github.com/vinay-bhati/RV-Cal/raw/d79adf200471bc124ce52bede8fdc600a251f83c/Sample_GLI_Has_Fvc_Percent_Predicted.xlsx).
+            """, unsafe_allow_html=True)
+                    
+                    st.markdown("""
             ### Batch Processing Instructions
             - **File Type:** Excel file (.xlsx)
             - **Required Columns:** age, gender, measured_fev1, measured_fvc, fvc_percent_predicted
@@ -641,11 +647,6 @@ elif process_type == 'Batch':
               
             Please ensure that your file adheres to the above format to avoid processing errors.
             """)
-                    st.markdown("""
-            #### Download Sample Excel Template
-            
-            To ensure your file has the correct format, download and use this [Download Excel](https://github.com/vinay-bhati/RV-Cal/raw/d79adf200471bc124ce52bede8fdc600a251f83c/Sample_GLI_Has_Fvc_Percent_Predicted.xlsx).
-            """, unsafe_allow_html=True)
 
                     file = st.file_uploader("Upload Excel File", type=['xlsx'])
                     if file and st.button('Process Batch File'):
@@ -660,6 +661,12 @@ elif process_type == 'Batch':
                             )
                 elif has_fvc_pred == 'No':
                     st.markdown("""
+                    #### Download Sample Excel Template
+                    
+                    To help you prepare your data correctly, download and use this [Download Excel](https://github.com/vinay-bhati/RV-Cal/raw/refs/heads/main/Sample_GLI.xlsx) template.
+                    """, unsafe_allow_html=True)
+                    
+                    st.markdown("""
                     ### Batch Processing Instructions
                     - **File Type:** Excel file (.xlsx)
                     - **Required Columns:** age, gender, height, measured_fev1, measured_fvc
@@ -672,11 +679,6 @@ elif process_type == 'Batch':
                     
                     Please ensure that your file adheres to the above format to avoid processing errors.
                     """)
-                    st.markdown("""
-                    #### Download Sample Excel Template
-                    
-                    To help you prepare your data correctly, download and use this [Download Excel](https://github.com/vinay-bhati/RV-Cal/raw/refs/heads/main/Sample_GLI.xlsx) template.
-                    """, unsafe_allow_html=True)
 
                     file = st.file_uploader("Upload Excel File", type=['xlsx'])
                     if file and st.button('Process Batch File'):
@@ -690,6 +692,12 @@ elif process_type == 'Batch':
                                 mime='text/csv'
                             )
             elif standard == 'ECSC':
+                st.markdown("""
+                #### Download Sample Excel Template
+                
+                To help you prepare your data correctly, download and use this [Download Excel](https://github.com/vinay-bhati/RV-Cal/raw/refs/heads/main/Sample_ECSC.xlsx) template.
+                """, unsafe_allow_html=True)
+                
                 st.markdown("""
                 ### Batch Processing Instructions
                 - **File Type:** Excel file (.xlsx)
@@ -705,11 +713,6 @@ elif process_type == 'Batch':
                 Please ensure that your file adheres to the above format to avoid processing errors.
                 """)
                 
-                st.markdown("""
-                #### Download Sample Excel Template
-                
-                To help you prepare your data correctly, download and use this [Download Excel](https://github.com/vinay-bhati/RV-Cal/raw/refs/heads/main/Sample_ECSC.xlsx) template.
-                """, unsafe_allow_html=True)
                 file = st.file_uploader("Upload Excel File", type=['xlsx'])
                 if file and st.button('Process Batch File'):
                     processed_data = process_ecsc_batch(file)
