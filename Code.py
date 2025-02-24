@@ -20,7 +20,7 @@ s3_client = boto3.client(
     aws_secret_access_key=secret_key
 )
 rv_threshold = None
-def append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, height, measured_fev1, measured_fvc, fvc_percent_predicted, predicted_fev1, predicted_fvc, predicted_fev1_fvc, rv_percent_est, rv150_prob, rv175_prob, rv200_prob, race):
+def append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, height, measured_fev1, measured_fvc, fvc_percent_predicted, predicted_fev1, predicted_fvc, predicted_fev1_fvc, rv_percent_est, rv150_prob, race):
     # Prepare the CSV row as a string, note the newline at the start
     date_today = date.today().isoformat()
     date_time = datetime.now().isoformat()
