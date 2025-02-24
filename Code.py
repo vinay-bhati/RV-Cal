@@ -237,9 +237,9 @@ def process_gli_batch_excel(file):
                 "fvc_percent_predicted": fvc_percent_predicted,
                 "measured_fev1_fvc": measured_fev1_fvc,
                 #"rv_percent_est": rv_percent_est,
-                "rv150": rv150,
-                "rv175": rv175,
-                "rv200": rv200
+                "rv150": rv150
+                #"rv175": rv175,
+                #"rv200": rv200
             })
             success_count += 1
 
@@ -297,9 +297,9 @@ def process_gli_batch_no_fvc_pred(file):
                     "measured_fvc": measured_fvc,
                     "fev1_fvc_ratio": measured_fev1_fvc,
                     "FVC % predicted":percent_predicted_fvc,
-                    "rv150": rv150,
-                    "rv175": rv175,
-                    "rv200": rv200
+                    "rv150": rv150
+                    #"rv175": rv175,
+                    #"rv200": rv200
                 })
                 success_count += 1
 
@@ -376,9 +376,9 @@ def process_ecsc_batch(file):
                 "measured_fvc": measured_fvc,
                 "fvc_percent_predicted": fvc_percent_predicted,
                 "fev1_fvc_ratio": fev1_fvc_ratio,
-                "rv150": rv150,
-                "rv175": rv175,
-                "rv200": rv200
+                "rv150": rv150
+                #"rv175": rv175,
+                #"rv200": rv200
             })
             success_count += 1
 
@@ -456,10 +456,10 @@ if process_type == 'Single':
                             #     st.metric(label="RV % Estimate", value=f"{rv_percent_est:.1f}")
                             with col10:
                                 st.metric(label="RV >150% Probability", value=f"{RV150:.1f}%")
-                            with col11:
-                                st.metric(label="RV >175% Probability", value=f"{RV175:.1f}%")
-                            with col12:
-                                st.metric(label="RV >200% Probability", value=f"{RV200:.1f}%")
+                            # with col11:
+                            #     st.metric(label="RV >175% Probability", value=f"{RV175:.1f}%")
+                            # with col12:
+                            #     st.metric(label="RV >200% Probability", value=f"{RV200:.1f}%")
         
                             # st.write("Final Result")
                             # # Final Result based on the RV% Est threshold
@@ -468,7 +468,7 @@ if process_type == 'Single':
                             # else:
                             #     st.error(f"Patient is Fit, No Further Care Required 🔴")
                             # Append the data to the CSV file in S3
-                            append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, None, measured_fev1, measured_fvc, fvc_percent_predicted, None, None, None, rv_percent_est, RV150, RV175, RV200,None)
+                            append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, None, measured_fev1, measured_fvc, fvc_percent_predicted, None, None, None, rv_percent_est, RV150, None)
                         elif evaluate_pressed:
                             st.error("Please fill in all required fields before evaluating.")
                             
@@ -531,10 +531,10 @@ if process_type == 'Single':
                             #     st.metric(label="RV % Estimate", value=f"{rv_percent_est:.1f}")
                             with col10:
                                 st.metric(label="RV >150% Probability", value=f"{RV150:.1f}%")
-                            with col11:
-                                st.metric(label="RV >175% Probability", value=f"{RV175:.1f}%")
-                            with col12:
-                                st.metric(label="RV >200% Probability", value=f"{RV200:.1f}%")
+                            # with col11:
+                            #     st.metric(label="RV >175% Probability", value=f"{RV175:.1f}%")
+                            # with col12:
+                            #     st.metric(label="RV >200% Probability", value=f"{RV200:.1f}%")
         
                             # st.write("Final Result")
                             # # Final Result based on the RV% Est threshold
@@ -543,7 +543,7 @@ if process_type == 'Single':
                             # else:
                             #     st.error(f"Patient is Fit, No Further Care Required 🔴")
                             # Append the data to the CSV file in S3
-                            append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, height, measured_fev1, measured_fvc, percent_predicted_fvc, fev1, fvc, fev1_fvc, rv_percent_est, RV150, RV175, RV200,None)
+                            append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, height, measured_fev1, measured_fvc, percent_predicted_fvc, fev1, fvc, fev1_fvc, rv_percent_est, RV150, None)
     
                         elif calculate_pressed:
                             st.error("Please fill in all required fields before calculating.")
@@ -590,14 +590,14 @@ if process_type == 'Single':
                                 #st.metric(label="RV >150% Probability", value=f"{rv150}%")
                                 #st.write(f"RV >150% Probability: {rv150}%")
                                 st.metric(label="RV >150% Probability", value=f"{rv150:.1f}%")
-                            with col10:
-                                #st.metric(label="RV >175% Probability", value=f"{rv175}%")
-                                #st.write(f"RV >175% Probability: {rv175}%")
-                                st.metric(label="RV >175% Probability", value=f"{rv175:.1f}%")
-                            with col11:
-                                #st.metric(label="RV >200% Probability", value=f"{rv200}%")
-                                #st.write(f"RV >200% Probability: {rv200}%")
-                                st.metric(label="RV >200% Probability", value=f"{rv200:.1f}%")
+                            # with col10:
+                            #     #st.metric(label="RV >175% Probability", value=f"{rv175}%")
+                            #     #st.write(f"RV >175% Probability: {rv175}%")
+                            #     st.metric(label="RV >175% Probability", value=f"{rv175:.1f}%")
+                            # with col11:
+                            #     #st.metric(label="RV >200% Probability", value=f"{rv200}%")
+                            #     #st.write(f"RV >200% Probability: {rv200}%")
+                            #     st.metric(label="RV >200% Probability", value=f"{rv200:.1f}%")
                         
                             # st.write("Final Result")
                             # # Final Result based on the RV% Est threshold
@@ -611,7 +611,7 @@ if process_type == 'Single':
                             race_text = 'White' if race == 1 else 'Black'
     
                             # Append the data to the CSV file in S3
-                            append_to_s3(email, rv_threshold, standard, None, gender_text, age, height, measured_fev1, measured_fvc, fvc_percent_predicted_ecsc, None, None, None, rv_percent_est, rv150, rv175, rv200, race_text)
+                            append_to_s3(email, rv_threshold, standard, None, gender_text, age, height, measured_fev1, measured_fvc, fvc_percent_predicted_ecsc, None, None, None, rv_percent_est, rv150, race_text)
     
     
                         elif calculate_ECSC:
