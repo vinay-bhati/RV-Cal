@@ -24,7 +24,7 @@ def append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, heigh
     # Prepare the CSV row as a string, note the newline at the start
     date_today = date.today().isoformat()
     date_time = datetime.now().isoformat()
-    data_row = f"\n{email}|{rv_threshold}|{standard}|{has_fvc_pred}|{gender}|{age}|{height}|{measured_fev1}|{measured_fvc}|{fvc_percent_predicted}|{round(predicted_fev1, 2) if has_fvc_pred == 'No' else ''}|{round(predicted_fvc, 2) if has_fvc_pred == 'No' else ''}|{round(predicted_fev1_fvc, 2) if has_fvc_pred == 'No' else ''}|{rv_percent_est}|{round(rv150_prob,2)}|{round(rv175_prob,2)}|{round(rv200_prob,2)}|{race}|{date_today}|{date_time}"
+    data_row = f"\n{email}|{rv_threshold}|{standard}|{has_fvc_pred}|{gender}|{age}|{height}|{measured_fev1}|{measured_fvc}|{fvc_percent_predicted}|{round(predicted_fev1, 2) if has_fvc_pred == 'No' else ''}|{round(predicted_fvc, 2) if has_fvc_pred == 'No' else ''}|{round(predicted_fev1_fvc, 2) if has_fvc_pred == 'No' else ''}|{rv_percent_est}|{round(rv150_prob,2)}|{race}|{date_today}|{date_time}"
 
     # Bucket and file details
     bucket_name = st.secrets["aws"]["bucket_name"]
