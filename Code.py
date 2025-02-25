@@ -229,15 +229,15 @@ def process_gli_batch_excel(file):
             rv150, rv175, rv200 = calculate_rv_predicted(rv_percent_est)
 
             results.append({
-                "email": email1,
-                "age": age,
-                "gender": gender,
-                "measured_fev1": measured_fev1,
-                "measured_fvc": measured_fvc,
-                "fvc_percent_predicted": fvc_percent_predicted,
-                "measured_fev1_fvc": measured_fev1_fvc,
+                "Email": email1,
+                "Age": age,
+                "Gender": gender,
+                "FEV1": measured_fev1,
+                "FVC": measured_fvc,
+                "FCV % predicted": fvc_percent_predicted,
+                "FEV1/FVC": measured_fev1_fvc,
                 #"rv_percent_est": rv_percent_est,
-                "rv150": rv150
+                "Probability of RV>150": rv150
                 #"rv175": rv175,
                 #"rv200": rv200
             })
