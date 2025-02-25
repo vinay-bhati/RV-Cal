@@ -234,7 +234,7 @@ def process_gli_batch_excel(file):
                 "Gender": gender,
                 "FEV1": measured_fev1,
                 "FVC": measured_fvc,
-                "FCV % predicted": fvc_percent_predicted,
+                "FCV % Predicted": fvc_percent_predicted,
                 "FEV1/FVC": measured_fev1_fvc,
                 #"rv_percent_est": rv_percent_est,
                 "Probability of RV>150": rv150
@@ -289,15 +289,15 @@ def process_gli_batch_no_fvc_pred(file):
                 rv150, rv175, rv200 = calculate_rv_predicted(rv_percent_est)
 
                 results.append({
-                    "email": email2,
-                    "age": age,
-                    "gender": gender,
-                    "height": height,
-                    "measured_fev1": measured_fev1,
-                    "measured_fvc": measured_fvc,
-                    "fev1_fvc_ratio": measured_fev1_fvc,
-                    "FVC % predicted":percent_predicted_fvc,
-                    "rv150": rv150
+                    "Email": email2,
+                    "Age": age,
+                    "Gender": gender,
+                    "Height": height,
+                    "FEV1": measured_fev1,
+                    "FVC": measured_fvc,
+                    "FEV1/FVC": measured_fev1_fvc,
+                    "FVC % Predicted":percent_predicted_fvc,
+                    "Probability of RV>150": rv150
                     #"rv175": rv175,
                     #"rv200": rv200
                 })
@@ -367,16 +367,16 @@ def process_ecsc_batch(file):
             race = 'White' if race == 1 else "Black"
 
             results.append({
-                "email": email3,
-                "age": age,
-                "gender": gender,
-                "height": height,
-                "race":race,
-                "measured_fev1": measured_fev1,
-                "measured_fvc": measured_fvc,
-                "fvc_percent_predicted": fvc_percent_predicted,
-                "fev1_fvc_ratio": fev1_fvc_ratio,
-                "rv150": rv150
+                "Email": email3,
+                "Age": age,
+                "Gender": gender,
+                "Height": height,
+                "Race":race,
+                "FEV1": measured_fev1,
+                "FVC": measured_fvc,
+                "FVC % Predicted": fvc_percent_predicted,
+                "FEV1/FVC": fev1_fvc_ratio,
+                "Probability of RV>150": rv150
                 #"rv175": rv175,
                 #"rv200": rv200
             })
@@ -637,13 +637,13 @@ elif process_type == 'Batch':
                     st.markdown("""
             ### Batch Processing Instructions
             - **File Type:** Excel file (.xlsx)
-            - **Required Columns:** age, gender, measured_fev1, measured_fvc, fvc_percent_predicted
+            - **Required Columns:** Age, Gender, FEV1, FVC, FVC % Predicted
             - **Data Format:**
-              - **age:** Integer (3 - 95)
-              - **gender:** Text ('Male' or 'Female')
-              - **measured_fev1:** Float (format x.xx, e.g., 2.34)
-              - **measured_fvc:** Float (format x.xx, e.g., 3.45)
-              - **fvc_percent_predicted:** Float (format x.x, e.g., 12.4)
+              - **Age:** (3 - 95)
+              - **Gender:** ('Male' or 'Female')
+              - **FEV1:** ( x.xx, e.g., 2.34)
+              - **FVC:** ( x.xx, e.g., 3.45)
+              - **FVC % Predicted:** ( x.x, e.g., 12.4)
               
             Please ensure that your file adheres to the above format to avoid processing errors.
             """)
@@ -669,13 +669,13 @@ elif process_type == 'Batch':
                     st.markdown("""
                     ### Batch Processing Instructions
                     - **File Type:** Excel file (.xlsx)
-                    - **Required Columns:** age, gender, height, measured_fev1, measured_fvc
+                    - **Required Columns:** Age, Gender, Height, FEV1, FVC
                     - **Data Format:**
-                      - **age:** Integer (3 - 95)
-                      - **gender:** Text ('Male' or 'Female')
-                      - **height:** Float (format x.x or x.xx, e.g., 175.5)
-                      - **measured_fev1:** Float (format x.xx, e.g., 2.34)
-                      - **measured_fvc:** Float (format x.xx, e.g., 3.45)
+                      - **Age:** (3 - 95)
+                      - **Gender:**  ('Male' or 'Female')
+                      - **Height:** (format x.x or x.xx, e.g., 175.5)
+                      - **FEV1:** (format x.xx, e.g., 2.34)
+                      - **FVC:** ( x.xx, e.g., 3.45)
                     
                     Please ensure that your file adheres to the above format to avoid processing errors.
                     """)
@@ -701,14 +701,14 @@ elif process_type == 'Batch':
                 st.markdown("""
                 ### Batch Processing Instructions
                 - **File Type:** Excel file (.xlsx)
-                - **Required Columns:** age, gender, height, measured_fev1, measured_fvc, race
+                - **Required Columns:** Age, Gender, Height, FEV1, FVC, Race
                 - **Data Format:**
-                  - **age:** Integer (3 - 95)
-                  - **gender:** Text ('Male' or 'Female')
-                  - **height:** Float (format x.x or x.xx, e.g., 175.5)
-                  - **measured_fev1:** Float (format x.xx, e.g., 2.34)
-                  - **measured_fvc:** Float (format x.xx, e.g., 3.45)
-                  - **race:** Text ('White' or 'Black')
+                  - **age:** (3 - 95)
+                  - **gender:** ('Male' or 'Female')
+                  - **height:** (format x.x or x.xx, e.g., 175.5)
+                  - **FEV1:** (format x.xx, e.g., 2.34)
+                  - **FVC:**  (format x.xx, e.g., 3.45)
+                  - **Race:**  ('White' or 'Black')
                 
                 Please ensure that your file adheres to the above format to avoid processing errors.
                 """)
