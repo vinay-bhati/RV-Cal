@@ -6,6 +6,7 @@ from validate_email import validate_email
 import boto3
 from io import StringIO,BytesIO
 from datetime import date, datetime
+import io
 
 # Load AWS configuration from secrets
 access_key = st.secrets["aws"]["access_key"]
@@ -714,15 +715,32 @@ elif process_type == 'Batch':
                 """)
                 
                 file = st.file_uploader("Upload Excel File", type=['xlsx'])
+                # if file and st.button('Process Batch File'):
+                #     processed_data = process_ecsc_batch(file)
+                #     if processed_data is not None and not processed_data.empty:
+                #         processed_data_csv = processed_data.to_csv(index=False).encode('utf-8')
+                #         st.download_button(
+                #             label="Download Processed Data as CSV",
+                #             data=processed_data_csv,
+                #             file_name='processed_ecsc_data.csv',
+                #             mime='text/csv'
+                #         )
                 if file and st.button('Process Batch File'):
                     processed_data = process_ecsc_batch(file)
                     if processed_data is not None and not processed_data.empty:
-                        processed_data_csv = processed_data.to_csv(index=False).encode('utf-8')
+                        # Create an Excel file in memory
+                        output = io.BytesIO()
+                        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+                            processed_data.to_excel(writer, index=False, sheet_name='Processed_Data')
+                            writer.close()
+                        output.seek(0)
+                
+                        # Provide download button for Excel file
                         st.download_button(
-                            label="Download Processed Data as CSV",
-                            data=processed_data_csv,
-                            file_name='processed_ecsc_data.csv',
-                            mime='text/csv'
+                            label="Download Processed Data as Excel",
+                            data=output,
+                            file_name='processed_ecsc_data.xlsx',
+                            mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
                         )
 else:
         st.write("Please enter an email address to continue.")
