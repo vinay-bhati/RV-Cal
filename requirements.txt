@@ -4,3 +4,4 @@ numpy
 streamlit
 boto3
 openpyxl
+xlsxwriter
