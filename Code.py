@@ -652,16 +652,61 @@ elif process_type == 'Batch':
             """)
 
                     file = st.file_uploader("Upload Excel File", type=['xlsx'])
+                    
+                    # if file and st.button('Process Batch File'):
+                    #     processed_data = process_gli_batch_excel(file)
+                    #     if processed_data is not None and not processed_data.empty:
+                    #         processed_data_csv = processed_data.to_csv(index=False).encode('utf-8')
+                    #         st.download_button(
+                    #             label="Download Processed Data",
+                    #             data=processed_data_csv,
+                    #             file_name='processed_data.csv',
+                    #             mime='text/csv',
+                    #         )
                     if file and st.button('Process Batch File'):
                         processed_data = process_gli_batch_excel(file)
+                        
                         if processed_data is not None and not processed_data.empty:
-                            processed_data_csv = processed_data.to_csv(index=False).encode('utf-8')
+                            # Create an Excel file in memory
+                            output = io.BytesIO()
+                            
+                            # Write DataFrame to Excel
+                            with pd.ExcelWriter(output, engine='openpyxl') as writer:
+                                processed_data.to_excel(writer, index=False, sheet_name='Processed_Data')
+                                writer.book.save(output)  # Save initial file
+                            
+                            # Load workbook to apply formatting
+                            output.seek(0)
+                            workbook = load_workbook(output)
+                            worksheet = workbook['Processed_Data']
+            
+                            # Define a green fill color
+                            green_fill = PatternFill(start_color="92D050", end_color="92D050", fill_type="solid")  # Light green
+            
+                            # List of columns to highlight
+                            result_columns = ["FEV1/FVC", "Probability of RV>150"]
+            
+                            # Find column indexes dynamically
+                            col_indexes = [processed_data.columns.get_loc(col) + 1 for col in result_columns]
+            
+                            # Apply fill to all rows in the selected columns
+                            for col_idx in col_indexes:
+                                for row in range(2, len(processed_data) + 2):  # Start from row 2 (headers in row 1)
+                                    worksheet.cell(row=row, column=col_idx).fill = green_fill
+            
+                            # Save the updated workbook to memory
+                            output = io.BytesIO()
+                            workbook.save(output)
+                            output.seek(0)
+            
+                            # Provide download button for Excel file
                             st.download_button(
-                                label="Download Processed Data",
-                                data=processed_data_csv,
-                                file_name='processed_data.csv',
-                                mime='text/csv',
+                                label="Download Processed Data as Excel",
+                                data=output,
+                                file_name='processed_gli_data.xlsx',
+                                mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
                             )
+            
                 elif has_fvc_pred == 'No':
                     st.markdown("""
                     #### Download Sample Excel Template
