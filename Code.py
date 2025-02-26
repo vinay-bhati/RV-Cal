@@ -652,8 +652,8 @@ elif process_type == 'Batch':
             - **Data Format:**
               - **Age:** (3 - 95)
               - **Gender:** ('Male' or 'Female')
-              - **FEV1:** ( x.xx, e.g., 2.34)
-              - **FVC:** ( x.xx, e.g., 3.45)
+              - **FEV1:** ( x.xx, e.g., 2.34) liters (L)
+              - **FVC:** ( x.xx, e.g., 3.45) liters (L)
               - **FVC % Predicted:** ( x.x, e.g., 12.4)
               
             Please ensure that your file adheres to the above format to avoid processing errors.
@@ -730,8 +730,8 @@ elif process_type == 'Batch':
                       - **Age:** (3 - 95)
                       - **Gender:**  ('Male' or 'Female')
                       - **Height:** (format x.x or x.xx, e.g., 175.5)
-                      - **FEV1:** (format x.xx, e.g., 2.34)
-                      - **FVC:** ( x.xx, e.g., 3.45)
+                      - **FEV1:** (format x.xx, e.g., 2.34) liters (L)
+                      - **FVC:** ( x.xx, e.g., 3.45) liters (L)
                     
                     Please ensure that your file adheres to the above format to avoid processing errors.
                     """)
@@ -805,8 +805,8 @@ elif process_type == 'Batch':
                   - **Age:** (3 - 95)
                   - **Gender:** ('Male' or 'Female')
                   - **Height:** (format x.x or x.xx, e.g., 175.5)
-                  - **FEV1:** (format x.xx, e.g., 2.34)
-                  - **FVC:**  (format x.xx, e.g., 3.45)
+                  - **FEV1:** (format x.xx, e.g., 2.34) liters (L)
+                  - **FVC:**  (format x.xx, e.g., 3.45) liters (L)
                   - **Race:**  ('White' or 'Black')
                 
                 Please ensure that your file adheres to the above format to avoid processing errors.
