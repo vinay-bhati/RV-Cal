@@ -337,23 +337,23 @@ def process_ecsc_batch(file):
     for index, row in df.iterrows():
         try:
             # Check for necessary columns
-            if 'Race' not in df.columns:
+            if 'race' not in df.columns:
                 raise ValueError("Column 'Race' is missing from the Excel file.")
 
             # Validate and normalize input data
-            if pd.isna(row['Age']) or pd.isna(row['Gender']) or \
-               pd.isna(row['Height']) or pd.isna(row['FEV1']) or \
-               pd.isna(row['FVC']) or pd.isna(row['Race']):
+            if pd.isna(row['age']) or pd.isna(row['gender']) or \
+               pd.isna(row['height']) or pd.isna(row['fev1']) or \
+               pd.isna(row['fvc']) or pd.isna(row['race']):
                 raise ValueError("Missing data in one or more required fields.")
 
             email3 = email
-            age = int(row['Age'])
-            gender = row['Gender'].strip().title()  # Normalize gender to handle case variations
-            height = float(row['Height'])
-            measured_fev1 = float(row['FEV1'])
-            measured_fvc = float(row['FVC'])
-            race = row['Race'].strip().title()  # Normalize race to handle case variations
-            unique_id = row['Unique ID']
+            age = int(row['age'])
+            gender = row['gender'].strip().title()  # Normalize gender to handle case variations
+            height = float(row['height'])
+            measured_fev1 = float(row['fev1'])
+            measured_fvc = float(row['fvc'])
+            race = row['race'].strip().title()  # Normalize race to handle case variations
+            unique_id = row['unique id']
 
             # Validate gender and race values
             if gender not in ['Male', 'Female']:
