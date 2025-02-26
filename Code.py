@@ -772,15 +772,15 @@ elif process_type == 'Batch':
                             # Save the workbook
                             writer.close()
             
-                    output.seek(0)
-                
+                        output.seek(0)
+                    
                         # Provide download button for Excel file
                         st.download_button(
-                            label="Download Processed Data as Excel",
-                            data=output,
-                            file_name='processed_ecsc_data.xlsx',
-                            mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-                        )
+                        label="Download Processed Data as Excel",
+                        data=output,
+                        file_name='processed_ecsc_data.xlsx',
+                        mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                            )
 else:
         st.write("Please enter an email address to continue.")
 
