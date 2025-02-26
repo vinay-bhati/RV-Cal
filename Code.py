@@ -263,23 +263,28 @@ def process_gli_batch_excel(file):
 def process_gli_batch_no_fvc_pred(file):
     try:
         df = pd.read_excel(file, engine='openpyxl')
-        results = []
-        success_count = 0
-        error_count = 0
+        df.columns = [col.strip().lower() for col in df.columns]  # Normalize column names
+    except Exception as e:
+        st.error(f"Failed to read the Excel file: {e}")
+        return None
+    results = []
+    success_count = 0
+    error_count = 0
         
         for index, row in df.iterrows():
             try:
                 # Ensure all required data is present
                 if pd.isna(row['age']) or pd.isna(row['gender']) or \
-                   pd.isna(row['height']) or pd.isna(row['measured_fev1']) or pd.isna(row['measured_fvc']):
+                   pd.isna(row['height']) or pd.isna(row['fev1']) or pd.isna(row['fvc']):
                     raise ValueError("Missing data in one or more required fields at row {}".format(index + 1))
 
                 email2 = email
                 age = int(row['age'])
                 gender = row['gender']
                 height = float(row['height'])
-                measured_fev1 = float(row['measured_fev1'])
-                measured_fvc = float(row['measured_fvc'])
+                measured_fev1 = float(row['fev1'])
+                measured_fvc = float(row['fvc'])
+                unique_id = row["unique id"]
 
                 # Perform the calculations as done in the single entry scenario
                 fev1, fvc, fev1_fvc = calculate_values(age, height, gender)
@@ -293,6 +298,7 @@ def process_gli_batch_no_fvc_pred(file):
                 percent_predicted_fvc = round(percent_predicted_fvc,1)
                 rv150 = round(rv150,1)
                 results.append({
+                    "Unique ID": unique_id
                     "Email": email2,
                     "Age": age,
                     "Gender": gender,
@@ -714,7 +720,7 @@ elif process_type == 'Batch':
                     st.markdown("""
                     #### Download Sample Excel Template
                     
-                    To help you prepare your data correctly, download and use this [Download Excel](https://github.com/vinay-bhati/RV-Cal/raw/refs/heads/main/Sample_GLI.xlsx) template.
+                    To help you prepare your data correctly, download and use this [Download Excel](https://github.com/vinay-bhati/RV-Cal/raw/refs/heads/main/GLI_No_FVC_Percent_Predicted.xlsx) template.
                     """, unsafe_allow_html=True)
                     
                     st.markdown("""
