@@ -291,7 +291,7 @@ def process_gli_batch_no_fvc_pred(file):
                 rv_percent_est = calculate_rv_est(percent_predicted_fvc, measured_fev1_fvc, age, gender)
                 rv150, rv175, rv200 = calculate_rv_predicted(rv_percent_est)
                 percent_predicted_fvc = round(percent_predicted_fvc,1)
-                rv_150 = round(rv_150,1)
+                rv150 = round(rv150,1)
                 results.append({
                     "Email": email2,
                     "Age": age,
