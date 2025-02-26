@@ -7,6 +7,7 @@ import boto3
 from io import StringIO,BytesIO
 from datetime import date, datetime
 import io
+from openpyxl.styles import PatternFill
 
 # Load AWS configuration from secrets
 access_key = st.secrets["aws"]["access_key"]
