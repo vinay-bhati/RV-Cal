@@ -725,15 +725,54 @@ elif process_type == 'Batch':
                 #             file_name='processed_ecsc_data.csv',
                 #             mime='text/csv'
                 #         )
+                # if file and st.button('Process Batch File'):
+                #     processed_data = process_ecsc_batch(file)
+                #     if processed_data is not None and not processed_data.empty:
+                #         # Create an Excel file in memory
+                #         output = io.BytesIO()
+                #         with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+                #             processed_data.to_excel(writer, index=False, sheet_name='Processed_Data')
+                #             writer.close()
+                #         output.seek(0)
+                
+                #         # Provide download button for Excel file
+                #         st.download_button(
+                #             label="Download Processed Data as Excel",
+                #             data=output,
+                #             file_name='processed_ecsc_data.xlsx',
+                #             mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                #         )
+
                 if file and st.button('Process Batch File'):
                     processed_data = process_ecsc_batch(file)
                     if processed_data is not None and not processed_data.empty:
                         # Create an Excel file in memory
                         output = io.BytesIO()
-                        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+                        with pd.ExcelWriter(output, engine='openpyxl') as writer:
                             processed_data.to_excel(writer, index=False, sheet_name='Processed_Data')
+                
+                            # Load the workbook and worksheet to apply styling
+                            workbook = writer.book
+                            worksheet = writer.sheets['Processed_Data']
+                
+                            # Define a green fill color
+                            green_fill = PatternFill(start_color="90EE90", end_color="90EE90", fill_type="solid")  # Light green
+                
+                            # List of columns to highlight
+                            result_columns = ["FVC % Predicted", "FEV1/FVC", "Probability of RV>150"]
+                
+                            # Find column indexes dynamically
+                            col_indexes = [processed_data.columns.get_loc(col) + 1 for col in result_columns]
+                
+                            # Apply fill to all rows in the selected columns
+                            for col_idx in col_indexes:
+                                for row in range(2, len(processed_data) + 2):  # Start from row 2 (headers in row 1)
+                                    worksheet.cell(row=row, column=col_idx).fill = green_fill
+                
+                            # Save the workbook
                             writer.close()
-                        output.seek(0)
+            
+                    output.seek(0)
                 
                         # Provide download button for Excel file
                         st.download_button(
