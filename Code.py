@@ -341,18 +341,19 @@ def process_ecsc_batch(file):
                 raise ValueError("Column 'race' is missing from the Excel file.")
 
             # Validate and normalize input data
-            if pd.isna(row['age']) or pd.isna(row['gender']) or \
-               pd.isna(row['height']) or pd.isna(row['measured_fev1']) or \
-               pd.isna(row['measured_fvc']) or pd.isna(row['race']):
+            if pd.isna(row['Age']) or pd.isna(row['Gender']) or \
+               pd.isna(row['Height']) or pd.isna(row['FEV1']) or \
+               pd.isna(row['FVC']) or pd.isna(row['Race']):
                 raise ValueError("Missing data in one or more required fields.")
 
             email3 = email
-            age = int(row['age'])
-            gender = row['gender'].strip().title()  # Normalize gender to handle case variations
-            height = float(row['height'])
-            measured_fev1 = float(row['measured_fev1'])
-            measured_fvc = float(row['measured_fvc'])
-            race = row['race'].strip().title()  # Normalize race to handle case variations
+            age = int(row['Age'])
+            gender = row['Gender'].strip().title()  # Normalize gender to handle case variations
+            height = float(row['Height'])
+            measured_fev1 = float(row['FEV1'])
+            measured_fvc = float(row['FVC'])
+            race = row['Race'].strip().title()  # Normalize race to handle case variations
+            unique_id = row['Unique ID']
 
             # Validate gender and race values
             if gender not in ['Male', 'Female']:
@@ -371,6 +372,7 @@ def process_ecsc_batch(file):
             race = 'White' if race == 1 else "Black"
 
             results.append({
+                "Unique ID": unique_id,
                 "Email": email3,
                 "Age": age,
                 "Gender": gender,
@@ -787,7 +789,7 @@ elif process_type == 'Batch':
                 st.markdown("""
                 #### Download Sample Excel Template
                 
-                To help you prepare your data correctly, download and use this [Download Excel](https://github.com/vinay-bhati/RV-Cal/raw/refs/heads/main/Sample_ECSC.xlsx) template.
+                To help you prepare your data correctly, download and use this [Download Excel](https://github.com/vinay-bhati/RV-Cal/raw/refs/heads/main/Sample_ECSC_N.xlsx) template.
                 """, unsafe_allow_html=True)
                 
                 st.markdown("""
