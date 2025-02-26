@@ -743,7 +743,6 @@ elif process_type == 'Batch':
                 #             file_name='processed_ecsc_data.xlsx',
                 #             mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
                 #         )
-
                 if file and st.button('Process Batch File'):
                     processed_data = process_ecsc_batch(file)
                     if processed_data is not None and not processed_data.empty:
@@ -752,7 +751,7 @@ elif process_type == 'Batch':
                         with pd.ExcelWriter(output, engine='openpyxl') as writer:
                             processed_data.to_excel(writer, index=False, sheet_name='Processed_Data')
                 
-                            # Load the workbook and worksheet to apply styling
+                            # Save workbook reference
                             workbook = writer.book
                             worksheet = writer.sheets['Processed_Data']
                 
@@ -770,18 +769,19 @@ elif process_type == 'Batch':
                                 for row in range(2, len(processed_data) + 2):  # Start from row 2 (headers in row 1)
                                     worksheet.cell(row=row, column=col_idx).fill = green_fill
                 
-                            # Save the workbook
-                            writer.close()
-            
+                            # Save the workbook properly
+                            writer._save()
+                
                         output.seek(0)
-                    
+                
                         # Provide download button for Excel file
                         st.download_button(
-                        label="Download Processed Data as Excel",
-                        data=output,
-                        file_name='processed_ecsc_data.xlsx',
-                        mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-                            )
+                            label="Download Processed Data as Excel",
+                            data=output,
+                            file_name='processed_ecsc_data.xlsx',
+                            mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                        )
+
 else:
         st.write("Please enter an email address to continue.")
 
