@@ -748,30 +748,34 @@ elif process_type == 'Batch':
                     if processed_data is not None and not processed_data.empty:
                         # Create an Excel file in memory
                         output = io.BytesIO()
+                
+                        # Write dataframe to Excel
                         with pd.ExcelWriter(output, engine='openpyxl') as writer:
                             processed_data.to_excel(writer, index=False, sheet_name='Processed_Data')
+                            writer.book.save(output)  # Properly save the workbook
                 
-                            # Save workbook reference
-                            workbook = writer.book
-                            worksheet = writer.sheets['Processed_Data']
+                        # Load workbook to apply formatting
+                        output.seek(0)
+                        workbook = load_workbook(output)
+                        worksheet = workbook['Processed_Data']
                 
-                            # Define a green fill color
-                            green_fill = PatternFill(start_color="90EE90", end_color="90EE90", fill_type="solid")  # Light green
+                        # Define a green fill color
+                        green_fill = PatternFill(start_color="90EE90", end_color="90EE90", fill_type="solid")  # Light green
                 
-                            # List of columns to highlight
-                            result_columns = ["FVC % Predicted", "FEV1/FVC", "Probability of RV>150"]
+                        # List of columns to highlight
+                        result_columns = ["FVC % Predicted", "FEV1/FVC", "Probability of RV>150"]
                 
-                            # Find column indexes dynamically
-                            col_indexes = [processed_data.columns.get_loc(col) + 1 for col in result_columns]
+                        # Find column indexes dynamically
+                        col_indexes = [processed_data.columns.get_loc(col) + 1 for col in result_columns]
                 
-                            # Apply fill to all rows in the selected columns
-                            for col_idx in col_indexes:
-                                for row in range(2, len(processed_data) + 2):  # Start from row 2 (headers in row 1)
-                                    worksheet.cell(row=row, column=col_idx).fill = green_fill
+                        # Apply fill to all rows in the selected columns
+                        for col_idx in col_indexes:
+                            for row in range(2, len(processed_data) + 2):  # Start from row 2 (headers in row 1)
+                                worksheet.cell(row=row, column=col_idx).fill = green_fill
                 
-                            # Save the workbook properly
-                            writer._save()
-                
+                        # Save the updated workbook to memory
+                        output = io.BytesIO()
+                        workbook.save(output)
                         output.seek(0)
                 
                         # Provide download button for Excel file
