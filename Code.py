@@ -201,6 +201,7 @@ def process_gli_batch_excel(file):
     # Read the uploaded Excel file into a DataFrame
     try:
         df = pd.read_excel(file, engine='openpyxl')
+        df.columns = [col.strip().lower() for col in df.columns]  # Normalize column names
     except Exception as e:
         st.error(f"Failed to read the Excel file: {e}")
         return
@@ -215,15 +216,16 @@ def process_gli_batch_excel(file):
         try:
             # Ensure all required data is present
             if pd.isna(row['age']) or pd.isna(row['gender']) or \
-               pd.isna(row['measured_fev1']) or pd.isna(row['measured_fvc']) or pd.isna(row['fvc_percent_predicted']):
+               pd.isna(row['fev1']) or pd.isna(row['fvc']) or pd.isna(row['fvc % predicted']):
                 raise ValueError("Missing data in one or more required fields.")
 
             email1 = email
             age = int(row['age'])
             gender = row['gender']
-            measured_fev1 = float(row['measured_fev1'])
-            measured_fvc = float(row['measured_fvc'])
-            fvc_percent_predicted = float(row['fvc_percent_predicted'])
+            measured_fev1 = float(row['fev1'])
+            measured_fvc = float(row['fvc'])
+            fvc_percent_predicted = float(row['fvc % predicted'])
+            unique_id = row['unique id']
 
             measured_fev1_fvc = measured_fev1 / measured_fvc if measured_fvc != 0 else 0
             measured_fev1_fvc = round(measured_fev1_fvc, 3)
@@ -232,6 +234,7 @@ def process_gli_batch_excel(file):
             rv150, rv175, rv200 = calculate_rv_predicted(rv_percent_est)
 
             results.append({
+                "Unique ID": unique_id,
                 "Email": email1,
                 "Age": age,
                 "Gender": gender,
@@ -639,7 +642,7 @@ elif process_type == 'Batch':
                     st.markdown("""
             #### Download Sample Excel Template
             
-            To ensure your file has the correct format, download and use this [Download Excel](https://github.com/vinay-bhati/RV-Cal/raw/d79adf200471bc124ce52bede8fdc600a251f83c/Sample_GLI_Has_Fvc_Percent_Predicted.xlsx).
+            To ensure your file has the correct format, download and use this [Download Excel](https://github.com/vinay-bhati/RV-Cal/raw/refs/heads/main/GLI_Has_FVC_Percent_Predicted.xlsx).
             """, unsafe_allow_html=True)
                     
                     st.markdown("""
