@@ -278,40 +278,40 @@ def process_gli_batch_no_fvc_pred(file):
                pd.isna(row['height']) or pd.isna(row['fev1']) or pd.isna(row['fvc']):
                 raise ValueError("Missing data in one or more required fields at row {}".format(index + 1))
 
-                email2 = email
-                age = int(row['age'])
-                gender = row['gender']
-                height = float(row['height'])
-                measured_fev1 = float(row['fev1'])
-                measured_fvc = float(row['fvc'])
-                unique_id = row["unique id"]
-    
-                # Perform the calculations as done in the single entry scenario
-                fev1, fvc, fev1_fvc = calculate_values(age, height, gender)
-                percent_predicted_fev1 = (measured_fev1 / fev1) * 100
-                percent_predicted_fvc = (measured_fvc / fvc) * 100
-                measured_fev1_fvc = measured_fev1 / measured_fvc if measured_fvc != 0 else 0
-                measured_fev1_fvc = round(measured_fev1_fvc, 3)
-                
-                rv_percent_est = calculate_rv_est(percent_predicted_fvc, measured_fev1_fvc, age, gender)
-                rv150, rv175, rv200 = calculate_rv_predicted(rv_percent_est)
-                percent_predicted_fvc = round(percent_predicted_fvc,1)
-                rv150 = round(rv150,1)
-                results.append({
-                    "Unique ID": unique_id
-                    "Email": email2,
-                    "Age": age,
-                    "Gender": gender,
-                    "Height": height,
-                    "FEV1": measured_fev1,
-                    "FVC": measured_fvc,
-                    "FEV1/FVC": measured_fev1_fvc,
-                    "FVC % Predicted":percent_predicted_fvc,
-                    "Probability of RV>150": rv150
-                    #"rv175": rv175,
-                    #"rv200": rv200
-                })
-                success_count += 1
+            email2 = email
+            age = int(row['age'])
+            gender = row['gender']
+            height = float(row['height'])
+            measured_fev1 = float(row['fev1'])
+            measured_fvc = float(row['fvc'])
+            unique_id = row["unique id"]
+
+            # Perform the calculations as done in the single entry scenario
+            fev1, fvc, fev1_fvc = calculate_values(age, height, gender)
+            percent_predicted_fev1 = (measured_fev1 / fev1) * 100
+            percent_predicted_fvc = (measured_fvc / fvc) * 100
+            measured_fev1_fvc = measured_fev1 / measured_fvc if measured_fvc != 0 else 0
+            measured_fev1_fvc = round(measured_fev1_fvc, 3)
+            
+            rv_percent_est = calculate_rv_est(percent_predicted_fvc, measured_fev1_fvc, age, gender)
+            rv150, rv175, rv200 = calculate_rv_predicted(rv_percent_est)
+            percent_predicted_fvc = round(percent_predicted_fvc,1)
+            rv150 = round(rv150,1)
+            results.append({
+                "Unique ID": unique_id,
+                "Email": email2,
+                "Age": age,
+                "Gender": gender,
+                "Height": height,
+                "FEV1": measured_fev1,
+                "FVC": measured_fvc,
+                "FEV1/FVC": measured_fev1_fvc,
+                "FVC % Predicted":percent_predicted_fvc,
+                "Probability of RV>150": rv150
+                #"rv175": rv175,
+                #"rv200": rv200
+            })
+            success_count += 1
 
         except Exception as e:
             error_count += 1
