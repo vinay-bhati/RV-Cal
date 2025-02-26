@@ -317,16 +317,12 @@ def process_gli_batch_no_fvc_pred(file):
             error_count += 1
             st.error(f"Error processing record {index + 1}: {e}")
 
-        results_df = pd.DataFrame(results)
-        st.success(f"Successfully processed: {success_count} records")
-        if error_count > 0:
-            st.error(f"Failed to process: {error_count} records")
+    results_df = pd.DataFrame(results)
+    st.success(f"Successfully processed: {success_count} records")
+    if error_count > 0:
+        st.error(f"Failed to process: {error_count} records")
 
-        return results_df
-
-    except Exception as e:
-        st.error(f"Failed to read the Excel file: {e}")
-        return None
+    return results_df
 
 def process_ecsc_batch(file):
     try:
