@@ -337,8 +337,8 @@ def process_ecsc_batch(file):
     for index, row in df.iterrows():
         try:
             # Check for necessary columns
-            if 'race' not in df.columns:
-                raise ValueError("Column 'race' is missing from the Excel file.")
+            if 'Race' not in df.columns:
+                raise ValueError("Column 'Race' is missing from the Excel file.")
 
             # Validate and normalize input data
             if pd.isna(row['Age']) or pd.isna(row['Gender']) or \
@@ -797,9 +797,9 @@ elif process_type == 'Batch':
                 - **File Type:** Excel file (.xlsx)
                 - **Required Columns:** Age, Gender, Height, FEV1, FVC, Race
                 - **Data Format:**
-                  - **age:** (3 - 95)
-                  - **gender:** ('Male' or 'Female')
-                  - **height:** (format x.x or x.xx, e.g., 175.5)
+                  - **Age:** (3 - 95)
+                  - **Gender:** ('Male' or 'Female')
+                  - **Height:** (format x.x or x.xx, e.g., 175.5)
                   - **FEV1:** (format x.xx, e.g., 2.34)
                   - **FVC:**  (format x.xx, e.g., 3.45)
                   - **Race:**  ('White' or 'Black')
