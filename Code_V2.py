@@ -23,11 +23,11 @@ s3_client = boto3.client(
     aws_secret_access_key=secret_key
 )
 rv_threshold = None
-def append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, height, measured_fev1, measured_fvc, fvc_percent_predicted, predicted_fev1, predicted_fvc, predicted_fev1_fvc, rv_percent_est, rv150_prob, race):
+def append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, height, measured_fev1, measured_fvc, fvc_percent_predicted, predicted_fev1, predicted_fvc, predicted_fev1_fvc, rv_percent_est, rv_probability, rv_target, race):
     # Prepare the CSV row as a string, note the newline at the start
     date_today = date.today().isoformat()
     date_time = datetime.now().isoformat()
-    data_row = f"\n{email}|{rv_threshold}|{standard}|{has_fvc_pred}|{gender}|{age}|{height}|{measured_fev1}|{measured_fvc}|{fvc_percent_predicted}|{round(predicted_fev1, 2) if has_fvc_pred == 'No' else ''}|{round(predicted_fvc, 2) if has_fvc_pred == 'No' else ''}|{round(predicted_fev1_fvc, 2) if has_fvc_pred == 'No' else ''}|{rv_percent_est}|{round(rv150_prob,2)}|{race}|{date_today}|{date_time}"
+    data_row = f"\n{email}|{rv_threshold}|{standard}|{has_fvc_pred}|{gender}|{age}|{height}|{measured_fev1}|{measured_fvc}|{fvc_percent_predicted}|{round(predicted_fev1, 2) if has_fvc_pred == 'No' else ''}|{round(predicted_fvc, 2) if has_fvc_pred == 'No' else ''}|{round(predicted_fev1_fvc, 2) if has_fvc_pred == 'No' else ''}|{rv_percent_est}|{round(rv_probability,2)}|{rv_target}|{race}|{date_today}|{date_time}"
 
     # Bucket and file details
     bucket_name = st.secrets["aws"]["bucket_name"]
@@ -463,12 +463,19 @@ if process_type == 'Single':
                             rv_percent_est = calculate_rv_est(fvc_percent_predicted, measured_fev1_fvc, age, gender)
                             # Calculate RV % Predicted Prevalence
                             RV150, RV175, RV200 = calculate_rv_predicted(rv_percent_est)
+                            if rv_target == "RV>150":
+                                selected_prob = rv150
+                            elif rv_target == "RV>175":
+                                selected_prob = rv175
+                            else:
+                                selected_prob = rv200
                             # Adding a row to display RV % est
                             col9, col10, col11, col12 = st.columns(4)
                             # with col9:
                             #     st.metric(label="RV % Estimate", value=f"{rv_percent_est:.1f}")
                             with col10:
-                                st.metric(label="RV >150% Probability", value=f"{RV150:.1f}%")
+                                st.metric(label=f"{rv_target} Probability", value=f"{selected_prob:.1f}%")
+                                #st.metric(label="RV >150% Probability", value=f"{RV150:.1f}%")
                             # with col11:
                             #     st.metric(label="RV >175% Probability", value=f"{RV175:.1f}%")
                             # with col12:
@@ -481,7 +488,7 @@ if process_type == 'Single':
                             # else:
                             #     st.error(f"Patient is Fit, No Further Care Required 🔴")
                             # Append the data to the CSV file in S3
-                            append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, None, measured_fev1, measured_fvc, fvc_percent_predicted, None, None, None, rv_percent_est, RV150, None)
+                            append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, None, measured_fev1, measured_fvc, fvc_percent_predicted, None, None, None, rv_percent_est, selected_prob, rv_target, None)
                         elif evaluate_pressed:
                             st.error("Please fill in all required fields before evaluating.")
                             
@@ -538,12 +545,19 @@ if process_type == 'Single':
                             rv_percent_est = calculate_rv_est(percent_predicted_fvc, measured_fev1_fvc, age, gender)
                             # Calculate RV % Predicted Prevalence
                             RV150, RV175, RV200 = calculate_rv_predicted(rv_percent_est)
+                            if rv_target == "RV>150":
+                                selected_prob = rv150
+                            elif rv_target == "RV>175":
+                                selected_prob = rv175
+                            else:
+                                selected_prob = rv200
                             # Adding a row to display RV % est
                             col9, col10, col11, col12 = st.columns(4)
                             # with col9:
                             #     st.metric(label="RV % Estimate", value=f"{rv_percent_est:.1f}")
                             with col10:
-                                st.metric(label="RV >150% Probability", value=f"{RV150:.1f}%")
+                                #st.metric(label="RV >150% Probability", value=f"{RV150:.1f}%")
+                                st.metric(label=f"{rv_target} Probability", value=f"{selected_prob:.1f}%")
                             # with col11:
                             #     st.metric(label="RV >175% Probability", value=f"{RV175:.1f}%")
                             # with col12:
@@ -556,7 +570,7 @@ if process_type == 'Single':
                             # else:
                             #     st.error(f"Patient is Fit, No Further Care Required 🔴")
                             # Append the data to the CSV file in S3
-                            append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, height, measured_fev1, measured_fvc, percent_predicted_fvc, fev1, fvc, fev1_fvc, rv_percent_est, RV150, None)
+                            append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, height, measured_fev1, measured_fvc, percent_predicted_fvc, fev1, fvc, fev1_fvc, rv_percent_est, selected_prob, rv_target, None)
     
                         elif calculate_pressed:
                             st.error("Please fill in all required fields before calculating.")
@@ -584,7 +598,12 @@ if process_type == 'Single':
                         if calculate_ECSC and age and height and measured_fev1 and measured_fvc:
                             pred_fvc = calculate_ecsc_fvc(age, height, measured_fev1, measured_fvc, gender, race)
                             fvc_percent_predicted_ecsc, fev1_fvc_ratio, rv_percent_est, rv150, rv175, rv200 = calculate_ecsc_metrics(age, height, measured_fev1, pred_fvc, measured_fvc,gender,race)
-    
+                            if rv_target == "RV>150":
+                                selected_prob = rv150
+                            elif rv_target == "RV>175":
+                                selected_prob = rv175
+                            else:
+                                selected_prob = rv200
                             col8, col9, col10, col11 = st.columns(4)
                             # Display the calculated values
                             # with col5:
@@ -602,7 +621,8 @@ if process_type == 'Single':
                             with col9:
                                 #st.metric(label="RV >150% Probability", value=f"{rv150}%")
                                 #st.write(f"RV >150% Probability: {rv150}%")
-                                st.metric(label="RV >150% Probability", value=f"{rv150:.1f}%")
+                                #st.metric(label="RV >150% Probability", value=f"{rv150:.1f}%")
+                                st.metric(label=f"{rv_target} Probability", value=f"{selected_prob:.1f}%")
                             # with col10:
                             #     #st.metric(label="RV >175% Probability", value=f"{rv175}%")
                             #     #st.write(f"RV >175% Probability: {rv175}%")
@@ -624,7 +644,7 @@ if process_type == 'Single':
                             race_text = 'White' if race == 1 else 'Black'
     
                             # Append the data to the CSV file in S3
-                            append_to_s3(email, rv_threshold, standard, None, gender_text, age, height, measured_fev1, measured_fvc, fvc_percent_predicted_ecsc, None, None, None, rv_percent_est, rv150, race_text)
+                            append_to_s3(email, rv_threshold, standard, None, gender_text, age, height, measured_fev1, measured_fvc, fvc_percent_predicted_ecsc, None, None, None, rv_percent_est, selected_prob, rv_target, race_text)
     
     
                         elif calculate_ECSC:
