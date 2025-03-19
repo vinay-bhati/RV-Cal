@@ -464,11 +464,11 @@ if process_type == 'Single':
                             # Calculate RV % Predicted Prevalence
                             RV150, RV175, RV200 = calculate_rv_predicted(rv_percent_est)
                             if rv_target == "RV>150":
-                                selected_prob = rv150
+                                selected_prob = RV150
                             elif rv_target == "RV>175":
-                                selected_prob = rv175
+                                selected_prob = RV175
                             else:
-                                selected_prob = rv200
+                                selected_prob = RV200
                             # Adding a row to display RV % est
                             col9, col10, col11, col12 = st.columns(4)
                             # with col9:
@@ -546,11 +546,11 @@ if process_type == 'Single':
                             # Calculate RV % Predicted Prevalence
                             RV150, RV175, RV200 = calculate_rv_predicted(rv_percent_est)
                             if rv_target == "RV>150":
-                                selected_prob = rv150
+                                selected_prob = RV150
                             elif rv_target == "RV>175":
-                                selected_prob = rv175
+                                selected_prob = RV175
                             else:
-                                selected_prob = rv200
+                                selected_prob = RV200
                             # Adding a row to display RV % est
                             col9, col10, col11, col12 = st.columns(4)
                             # with col9:
