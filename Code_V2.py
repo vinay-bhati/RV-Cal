@@ -232,6 +232,12 @@ def process_gli_batch_excel(file):
             
             rv_percent_est = calculate_rv_est(fvc_percent_predicted, measured_fev1_fvc, age, gender)
             rv150, rv175, rv200 = calculate_rv_predicted(rv_percent_est)
+            if rv_target == "RV>150":
+                selected_prob = rv150
+            elif rv_target == "RV>175":
+                selected_prob = rv175
+            else:
+                selected_prob = rv200
 
             results.append({
                 "Unique ID": unique_id,
@@ -243,7 +249,8 @@ def process_gli_batch_excel(file):
                 "FCV % Predicted": fvc_percent_predicted,
                 "FEV1/FVC": measured_fev1_fvc,
                 #"rv_percent_est": rv_percent_est,
-                "Probability of RV>150": rv150
+                #"Probability of RV>150": rv150
+                f"Probability of {rv_target}": selected_prob
                 #"rv175": rv175,
                 #"rv200": rv200
             })
@@ -300,6 +307,16 @@ def process_gli_batch_no_fvc_pred(file):
             rv150, rv175, rv200 = calculate_rv_predicted(rv_percent_est)
             percent_predicted_fvc = round(percent_predicted_fvc,1)
             rv150 = round(rv150,1)
+            rv175 = round(rv175,1)
+            rv200 = round(rv200,1)
+            
+            if rv_target == "RV>150":
+                selected_prob = rv150
+            elif rv_target == "RV>175":
+                selected_prob = rv175
+            else:
+                selected_prob = rv200
+            
             results.append({
                 "Unique ID": unique_id,
                 "Email": email2,
@@ -310,7 +327,8 @@ def process_gli_batch_no_fvc_pred(file):
                 "FVC (L)": measured_fvc,
                 "FEV1/FVC": measured_fev1_fvc,
                 "FVC % Predicted":percent_predicted_fvc,
-                "Probability of RV>150": rv150
+                f"Probability of {rv_target}": selected_prob
+                #"Probability of RV>150": rv150
                 #"rv175": rv175,
                 #"rv200": rv200
             })
@@ -372,10 +390,17 @@ def process_ecsc_batch(file):
 
             pred_fvc = calculate_ecsc_fvc(age, height, measured_fev1, measured_fvc, gender, race)
             fvc_percent_predicted, fev1_fvc_ratio, rv_percent_est, rv150, rv175, rv200 = calculate_ecsc_metrics(age, height, measured_fev1, pred_fvc, measured_fvc,gender,race)
-
+            
             gender = 'Male' if gender == 1 else "Female"
             race = 'White' if race == 1 else "Black"
 
+            if rv_target == "RV>150":
+                selected_prob = rv150
+            elif rv_target == "RV>175":
+                selected_prob = rv175
+            else:
+                selected_prob = rv200
+                
             results.append({
                 "Unique ID": unique_id,
                 "Email": email3,
@@ -387,7 +412,8 @@ def process_ecsc_batch(file):
                 "FVC (L)": measured_fvc,
                 "FVC % Predicted": fvc_percent_predicted,
                 "FEV1/FVC": fev1_fvc_ratio,
-                "Probability of RV>150": rv150
+                f"Probability of {rv_target}": selected_prob
+                #"Probability of RV>150": rv150
                 #"rv175": rv175,
                 #"rv200": rv200
             })
