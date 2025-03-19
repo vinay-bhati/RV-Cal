@@ -407,6 +407,8 @@ def process_ecsc_batch(file):
 st.title('RV ESTIMATE CALCULATOR')
 email = st.text_input("Enter email ID:")
 process_type = st.radio("Choose the type of process:", ('Single', 'Batch'),horizontal=True,index=None)
+# dropdown for RV % Target selection
+rv_target = st.selectbox("RV % Target", options=["RV>150", "RV>175", "RV>200"])
 
 if process_type == 'Single':
     
