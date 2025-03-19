@@ -238,8 +238,8 @@ def process_gli_batch_excel(file):
                 "Email": email1,
                 "Age": age,
                 "Gender": gender,
-                "FEV1": measured_fev1,
-                "FVC": measured_fvc,
+                "FEV1 (L)": measured_fev1,
+                "FVC (L)": measured_fvc,
                 "FCV % Predicted": fvc_percent_predicted,
                 "FEV1/FVC": measured_fev1_fvc,
                 #"rv_percent_est": rv_percent_est,
@@ -278,15 +278,15 @@ def process_gli_batch_no_fvc_pred(file):
         try:
             # Ensure all required data is present
             if pd.isna(row['age']) or pd.isna(row['gender']) or \
-               pd.isna(row['height']) or pd.isna(row['fev1']) or pd.isna(row['fvc']):
+               pd.isna(row['height']) or pd.isna(row['fev1 (l)']) or pd.isna(row['fvc (l)']):
                 raise ValueError("Missing data in one or more required fields at row {}".format(index + 1))
 
             email2 = email
             age = int(row['age'])
             gender = row['gender']
             height = float(row['height'])
-            measured_fev1 = float(row['fev1'])
-            measured_fvc = float(row['fvc'])
+            measured_fev1 = float(row['fev1 (l)'])
+            measured_fvc = float(row['fvc (l)'])
             unique_id = row["unique id"]
 
             # Perform the calculations as done in the single entry scenario
@@ -306,8 +306,8 @@ def process_gli_batch_no_fvc_pred(file):
                 "Age": age,
                 "Gender": gender,
                 "Height": height,
-                "FEV1": measured_fev1,
-                "FVC": measured_fvc,
+                "FEV1 (L)": measured_fev1,
+                "FVC (L)": measured_fvc,
                 "FEV1/FVC": measured_fev1_fvc,
                 "FVC % Predicted":percent_predicted_fvc,
                 "Probability of RV>150": rv150
@@ -648,7 +648,7 @@ elif process_type == 'Batch':
                     st.markdown("""
             ### Batch Processing Instructions
             - **File Type:** Excel file (.xlsx)
-            - **Required Columns:** Age, Gender, FEV1, FVC, FVC % Predicted
+            - **Required Columns:** Age, Gender, FEV1 (L), FVC (L), FVC % Predicted
             - **Data Format:**
               - **Age:** (3 - 95)
               - **Gender:** ('Male' or 'Female')
@@ -725,7 +725,7 @@ elif process_type == 'Batch':
                     st.markdown("""
                     ### Batch Processing Instructions
                     - **File Type:** Excel file (.xlsx)
-                    - **Required Columns:** Age, Gender, Height, FEV1, FVC
+                    - **Required Columns:** Age, Gender, Height, FEV1 (L), FVC (L)
                     - **Data Format:**
                       - **Age:** (3 - 95)
                       - **Gender:**  ('Male' or 'Female')
