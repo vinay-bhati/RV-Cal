@@ -347,16 +347,16 @@ def process_ecsc_batch(file):
 
             # Validate and normalize input data
             if pd.isna(row['age']) or pd.isna(row['gender']) or \
-               pd.isna(row['height']) or pd.isna(row['fev1']) or \
-               pd.isna(row['fvc']) or pd.isna(row['race']):
+               pd.isna(row['height']) or pd.isna(row['fev1 (l)']) or \
+               pd.isna(row['fvc (l)']) or pd.isna(row['race']):
                 raise ValueError("Missing data in one or more required fields.")
 
             email3 = email
             age = int(row['age'])
             gender = row['gender'].strip().title()  # Normalize gender to handle case variations
             height = float(row['height'])
-            measured_fev1 = float(row['fev1'])
-            measured_fvc = float(row['fvc'])
+            measured_fev1 = float(row['fev1 (l)'])
+            measured_fvc = float(row['fvc (l)'])
             race = row['race'].strip().title()  # Normalize race to handle case variations
             unique_id = row['unique id']
 
@@ -383,8 +383,8 @@ def process_ecsc_batch(file):
                 "Gender": gender,
                 "Height": height,
                 "Race":race,
-                "FEV1": measured_fev1,
-                "FVC": measured_fvc,
+                "FEV1 (L)": measured_fev1,
+                "FVC (L)": measured_fvc,
                 "FVC % Predicted": fvc_percent_predicted,
                 "FEV1/FVC": fev1_fvc_ratio,
                 "Probability of RV>150": rv150
@@ -800,7 +800,7 @@ elif process_type == 'Batch':
                 st.markdown("""
                 ### Batch Processing Instructions
                 - **File Type:** Excel file (.xlsx)
-                - **Required Columns:** Age, Gender, Height, FEV1, FVC, Race
+                - **Required Columns:** Age, Gender, Height, FEV1 (L), FVC (L), Race
                 - **Data Format:**
                   - **Age:** (3 - 95)
                   - **Gender:** ('Male' or 'Female')
