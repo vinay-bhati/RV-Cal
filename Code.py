@@ -430,9 +430,9 @@ if process_type == 'Single':
                         with col1:
                             age = st.number_input("Enter Age (Years):", min_value=3, max_value=95, step=1, key='age_yes')
                         with col2:
-                            measured_fev1 = st.number_input("Enter Measured FEV1 (XX.XX):",min_value=0.0,format="%.2f", step=0.01, key='fev1_yes')
+                            measured_fev1 = st.number_input("Enter Measured FEV1 (X.XL):",min_value=0.0,format="%.2f", step=0.01, key='fev1_yes')
                         with col3:
-                            measured_fvc = st.number_input("Enter Measured FVC (XX.XX):", min_value=0.0, format="%.2f", step=0.01, key='fvc_yes')
+                            measured_fvc = st.number_input("Enter Measured FVC (X.XL):", min_value=0.0, format="%.2f", step=0.01, key='fvc_yes')
                         with col4:
                             fvc_percent_predicted = st.number_input("Enter FVC % Predicted:", min_value=0.0,format="%.1f", step=0.1, key='fvc_percent_pred')
                             
@@ -495,9 +495,9 @@ if process_type == 'Single':
                         with col2:
                             height = st.number_input("Enter Height (in cm):", min_value=150.0, max_value=250.0, step=0.1, key='height',format="%.1f")
                         with col3:
-                            measured_fev1 = st.number_input("Enter Measured FEV1 (XX.XX):", min_value=0.0, format="%.2f", step=0.01, key='fev1')
+                            measured_fev1 = st.number_input("Enter Measured FEV1 (X.XL):", min_value=0.0, format="%.2f", step=0.01, key='fev1')
                         with col4:
-                            measured_fvc = st.number_input("Enter Measured FVC (XX.XX):", min_value=0.0, format="%.2f", step=0.01, key='fvc')
+                            measured_fvc = st.number_input("Enter Measured FVC (X.XL):", min_value=0.0, format="%.2f", step=0.01, key='fvc')
     
                          # Store the button press result in a variable
                         calculate_pressed = st.button('Calculate')
@@ -572,9 +572,9 @@ if process_type == 'Single':
                         with col2:
                             height = st.number_input("Height (in cm):", min_value=100.0, max_value=250.0, step=0.1, format="%.1f")
                         with col3:
-                            measured_fev1 = st.number_input("Enter Measured FEV1 (XX.XX):", min_value=0.0, format="%.2f", step=0.01)
+                            measured_fev1 = st.number_input("Enter Measured FEV1 (X.XL):", min_value=0.0, format="%.2f", step=0.01)
                         with col4:
-                            measured_fvc = st.number_input("Enter Measured FVC (XX.XX):", min_value=0.0, format="%.2f", step=0.01)
+                            measured_fvc = st.number_input("Enter Measured FVC (X.XL):", min_value=0.0, format="%.2f", step=0.01)
     
                         #Store the button press result in a variable
                         calculate_ECSC = st.button('Calculate ECSC')
@@ -689,7 +689,7 @@ elif process_type == 'Batch':
                             worksheet = workbook['Processed_Data']
             
                             # Define a green fill color
-                            green_fill = PatternFill(start_color="92D050", end_color="92D050", fill_type="solid")  # Light green
+                            green_fill = PatternFill(start_color="7E7E8D", end_color="7E7E8D", fill_type="solid")  # Light green
             
                             # List of columns to highlight
                             result_columns = ["FEV1/FVC", "Probability of RV>150"]
@@ -764,7 +764,7 @@ elif process_type == 'Batch':
                             worksheet = workbook['Processed_Data']
                     
                             # Define a green fill color
-                            green_fill = PatternFill(start_color="92D050", end_color="92D050", fill_type="solid")  # Light green
+                            green_fill = PatternFill(start_color="7E7E8D", end_color="7E7E8D", fill_type="solid")  # Light green
                     
                             # List of columns to highlight
                             result_columns = ["FEV1/FVC", "FVC % Predicted", "Probability of RV>150"]
@@ -857,7 +857,7 @@ elif process_type == 'Batch':
                         worksheet = workbook['Processed_Data']
                 
                         # Define a green fill color
-                        green_fill = PatternFill(start_color="92D050", end_color="92D050", fill_type="solid")  # Light green
+                        green_fill = PatternFill(start_color="7E7E8D", end_color="7E7E8D", fill_type="solid")  # Light green
                 
                         # List of columns to highlight
                         result_columns = ["FVC % Predicted", "FEV1/FVC", "Probability of RV>150"]
