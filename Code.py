@@ -689,7 +689,7 @@ elif process_type == 'Batch':
                             worksheet = workbook['Processed_Data']
             
                             # Define a green fill color
-                            green_fill = PatternFill(start_color="7E7E8D", end_color="7E7E8D", fill_type="solid")  # Light green
+                            green_fill = PatternFill(start_color="A6A6A6", end_color="A6A6A6", fill_type="solid")  # Light green
             
                             # List of columns to highlight
                             result_columns = ["FEV1/FVC", "Probability of RV>150"]
@@ -764,7 +764,7 @@ elif process_type == 'Batch':
                             worksheet = workbook['Processed_Data']
                     
                             # Define a green fill color
-                            green_fill = PatternFill(start_color="7E7E8D", end_color="7E7E8D", fill_type="solid")  # Light green
+                            green_fill = PatternFill(start_color="A6A6A6", end_color="A6A6A6", fill_type="solid")  # Light green
                     
                             # List of columns to highlight
                             result_columns = ["FEV1/FVC", "FVC % Predicted", "Probability of RV>150"]
@@ -857,7 +857,7 @@ elif process_type == 'Batch':
                         worksheet = workbook['Processed_Data']
                 
                         # Define a green fill color
-                        green_fill = PatternFill(start_color="7E7E8D", end_color="7E7E8D", fill_type="solid")  # Light green
+                        green_fill = PatternFill(start_color="A6A6A6", end_color="A6A6A6", fill_type="solid")  # Light green
                 
                         # List of columns to highlight
                         result_columns = ["FVC % Predicted", "FEV1/FVC", "Probability of RV>150"]
