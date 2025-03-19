@@ -738,9 +738,10 @@ elif process_type == 'Batch':
             
                             # Define a green fill color
                             green_fill = PatternFill(start_color="A6A6A6", end_color="A6A6A6", fill_type="solid")  # Light green
-            
+
+                            highlight_column_name = f"Probability of {rv_target}"
                             # List of columns to highlight
-                            result_columns = ["FEV1/FVC", "Probability of RV>150"]
+                            result_columns = ["FEV1/FVC", highlight_column_name]
             
                             # Find column indexes dynamically
                             col_indexes = [processed_data.columns.get_loc(col) + 1 for col in result_columns]
@@ -813,9 +814,10 @@ elif process_type == 'Batch':
                     
                             # Define a green fill color
                             green_fill = PatternFill(start_color="A6A6A6", end_color="A6A6A6", fill_type="solid")  # Light green
-                    
+
+                            highlight_column_name = f"Probability of {rv_target}"
                             # List of columns to highlight
-                            result_columns = ["FEV1/FVC", "FVC % Predicted", "Probability of RV>150"]
+                            result_columns = ["FEV1/FVC", "FVC % Predicted", highlight_column_name]
                     
                             # Find column indexes dynamically
                             col_indexes = [processed_data.columns.get_loc(col) + 1 for col in result_columns]
@@ -906,9 +908,9 @@ elif process_type == 'Batch':
                 
                         # Define a green fill color
                         green_fill = PatternFill(start_color="A6A6A6", end_color="A6A6A6", fill_type="solid")  # Light green
-                
+                        highlight_column_name = f"Probability of {rv_target}"
                         # List of columns to highlight
-                        result_columns = ["FVC % Predicted", "FEV1/FVC", "Probability of RV>150"]
+                        result_columns = ["FVC % Predicted", "FEV1/FVC", highlight_column_name]
                 
                         # Find column indexes dynamically
                         col_indexes = [processed_data.columns.get_loc(col) + 1 for col in result_columns]
