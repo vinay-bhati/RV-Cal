@@ -216,14 +216,14 @@ def process_gli_batch_excel(file):
         try:
             # Ensure all required data is present
             if pd.isna(row['age']) or pd.isna(row['gender']) or \
-               pd.isna(row['fev1']) or pd.isna(row['fvc']) or pd.isna(row['fvc % predicted']):
+               pd.isna(row['fev1 (l)']) or pd.isna(row['fvc (l)']) or pd.isna(row['fvc % predicted']):
                 raise ValueError("Missing data in one or more required fields.")
 
             email1 = email
             age = int(row['age'])
             gender = row['gender']
-            measured_fev1 = float(row['fev1'])
-            measured_fvc = float(row['fvc'])
+            measured_fev1 = float(row['fev1 (l)'])
+            measured_fvc = float(row['fvc (l)'])
             fvc_percent_predicted = float(row['fvc % predicted'])
             unique_id = row['unique id']
 
