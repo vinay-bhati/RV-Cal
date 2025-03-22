@@ -73,6 +73,7 @@ def calculate_values(age, height, gender):
     spline_fvc = df_fvc[df_fvc['age'] == age].iloc[0]
     spline_fev1_fvc = df_fev1_fvc[df_fev1_fvc['age'] == age].iloc[0]
     #spline_rv = df_rv[df_rv['age'] == age].iloc[0]
+
     
     if gender == 'Male':
         # Male calculations
