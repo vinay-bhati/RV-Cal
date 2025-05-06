@@ -10,11 +10,17 @@ import io
 from openpyxl.styles import PatternFill
 from openpyxl import load_workbook
 
-# Load AWS configuration from secrets
-access_key = st.secrets["aws"]["access_key"]
-secret_key = st.secrets["aws"]["secret_key"]
-bucket_name = st.secrets["aws"]["bucket_name"]
-s3_filename = st.secrets["aws"]["s3_filename"]
+# # Load AWS configuration from secrets
+# access_key = st.secrets["aws"]["access_key"]
+# secret_key = st.secrets["aws"]["secret_key"]
+# bucket_name = st.secrets["aws"]["bucket_name"]
+# s3_filename = st.secrets["aws"]["s3_filename"]
+
+# AWS 
+access_key = os.environ["AWS_ACCESS_KEY_ID"]
+secret_key = os.environ["AWS_SECRET_ACCESS_KEY"]
+bucket_name = os.environ["BUCKET_NAME"]
+s3_filename = os.environ["S3_FILENAME"]
 
 # Initialize the S3 client
 s3_client = boto3.client(
@@ -29,13 +35,14 @@ def append_to_s3(email, rv_threshold, standard, has_fvc_pred, gender, age, heigh
     date_time = datetime.now().isoformat()
     data_row = f"\n{email}|{rv_threshold}|{standard}|{has_fvc_pred}|{gender}|{age}|{height}|{measured_fev1}|{measured_fvc}|{fvc_percent_predicted}|{round(predicted_fev1, 2) if has_fvc_pred == 'No' else ''}|{round(predicted_fvc, 2) if has_fvc_pred == 'No' else ''}|{round(predicted_fev1_fvc, 2) if has_fvc_pred == 'No' else ''}|{rv_percent_est}|{round(rv150_prob,2)}|{race}|{date_today}|{date_time}"
 
-    # Bucket and file details
-    bucket_name = st.secrets["aws"]["bucket_name"]
-    s3_filename = st.secrets["aws"]["s3_filename"]
+    # # Bucket and file details
+    # bucket_name = st.secrets["aws"]["bucket_name"]
+    # s3_filename = st.secrets["aws"]["s3_filename"]
 
     # Initialize S3 client
-    s3_client = boto3.client('s3', aws_access_key_id=st.secrets["aws"]["access_key"], aws_secret_access_key=st.secrets["aws"]["secret_key"])
-
+    # s3_client = boto3.client('s3', aws_access_key_id=st.secrets["aws"]["access_key"], aws_secret_access_key=st.secrets["aws"]["secret_key"])
+    s3_client = boto3.client('s3', aws_access_key_id=os.environ["AWS_ACCESS_KEY_ID"], aws_secret_access_key=os.environ["AWS_SECRET_ACCESS_KEY"])
+    
     # Download the existing CSV from S3
     response = s3_client.get_object(Bucket=bucket_name, Key=s3_filename)
     existing_data = response['Body'].read().decode('utf-8')
@@ -91,7 +98,16 @@ def calculate_values(age, height, gender):
 
 def calculate_rv_est(percent_predicted_fvc, measured_fev1_fvc, age, gender):
     # Load constants from secrets
-    consts = st.secrets["rv_est_constants"]
+    # consts = st.secrets["rv_est_constants"]
+
+    consts = {
+    "fvc_multiplier": float(os.environ["RV_EST_FVC_MULTIPLIER"]),
+    "fev1_fvc_multiplier": float(os.environ["RV_EST_FEV1_FVC_MULTIPLIER"]),
+    "fvc_sqrt_multiplier": float(os.environ["RV_EST_FVC_SQRT_MULTIPLIER"]),
+    "age_multiplier": float(os.environ["RV_EST_AGE_MULTIPLIER"]),
+    "gender_multiplier": float(os.environ["RV_EST_GENDER_MULTIPLIER"]),
+    "constant": float(os.environ["RV_EST_CONSTANT"]),
+}
     
     # Converting gender to numeric value: 1 for Male, 0 for Female
     gender_numeric = 1 if gender == 'Male' else 0
@@ -109,7 +125,16 @@ def calculate_rv_est(percent_predicted_fvc, measured_fev1_fvc, age, gender):
 
 def calculate_rv_predicted(rv_percent_est):
     # Load constants from secrets
-    preds = st.secrets["rv_pred_constants"]
+    # preds = st.secrets["rv_pred_constants"]
+    
+    preds = {
+    "rv150_coef": float(os.environ["RV_PRED_150_COEF"]),
+    "rv150_intercept": float(os.environ["RV_PRED_150_INTERCEPT"]),
+    "rv175_coef": float(os.environ["RV_PRED_175_COEF"]),
+    "rv175_intercept": float(os.environ["RV_PRED_175_INTERCEPT"]),
+    "rv200_coef": float(os.environ["RV_PRED_200_COEF"]),
+    "rv200_intercept": float(os.environ["RV_PRED_200_INTERCEPT"]),
+}
     
     # Using the logistic regression model to predict probabilities
     rv150 = round((1 / (1 + math.exp(-1 * (preds["rv150_coef"] + preds["rv150_intercept"] * rv_percent_est)))), 3) * 100
